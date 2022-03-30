@@ -1,0 +1,51 @@
+dev_addr: 127.0.0.1:8888
+site_name: 'CS 340 Course Project'
+
+repo_url: https://github.com/jdoiro3/cs340-course-project
+repo_name: Repo
+
+theme:
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - navigation.instant
+    - content.code.annotate
+  highlightjs: true
+  name: material
+  palette: 
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+    - scheme: slate 
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+markdown_extensions:
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      options:
+          custom_icons:
+            - overrides/.icons
+
+plugins:
+  - search
+        
