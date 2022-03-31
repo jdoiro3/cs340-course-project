@@ -78,27 +78,27 @@ We can use this to document our solution. The documentation is versioned along w
 
 **Input**
 
-    ````text
-    ```mermaid
+````text
+```mermaid
 erDiagram
-    CUSTOMER ||--o{ ORDER : places
-    CUSTOMER {
-        string name
-        string custNumber
-        string sector
-    }
-    ORDER ||--|{ LINE-ITEM : contains
-    ORDER {
-        int orderNumber
-        string deliveryAddress
-    }
-    LINE-ITEM {
-        string productCode
-        int quantity
-        float pricePerUnit
-    }
-    ```
-    ````
+CUSTOMER ||--o{ ORDER : places
+CUSTOMER {
+    string name
+    string custNumber
+    string sector
+}
+ORDER ||--|{ LINE-ITEM : contains
+ORDER {
+    int orderNumber
+    string deliveryAddress
+}
+LINE-ITEM {
+    string productCode
+    int quantity
+    float pricePerUnit
+}
+```
+````
 
 **Output**
 
