@@ -1,6 +1,6 @@
 # Project Docs
 
-We can use this to document our solution.
+We can use this to document our solution. The documentation is versioned along with the source code.
 
 ## Features
 
