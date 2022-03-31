@@ -1,3 +1,7 @@
+# Project Docs
+
+We can use this to document our solution.
+
 ## Features
 
 ### Code
