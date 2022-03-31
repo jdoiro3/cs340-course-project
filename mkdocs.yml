@@ -1,5 +1,6 @@
 dev_addr: 127.0.0.1:8888
 site_name: 'CS 340 Course Project'
+edit_uri: /blob/main/
 
 repo_url: https://github.com/jdoiro3/cs340-course-project
 repo_name: Repo
