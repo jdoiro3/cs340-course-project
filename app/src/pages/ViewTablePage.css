@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.table-container {
+    width: 50vw !important;
+    height: 80vh;
+}
+
+.table-dropdown {
+    text-align: left;
+    margin-bottom: 3vh;
+}
