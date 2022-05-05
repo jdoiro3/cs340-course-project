@@ -1,7 +1,7 @@
 import './App.css'
 import { HashRouter, Routes, Route } from "react-router-dom"
 import ViewTablePage from './pages/ViewTablePage'
-import AddExercisePage from './pages/AddExercisePage'
+import AddEntityPage from './pages/AddEntityPage'
 import EditExercisePage from './pages/EditExercisePage'
 import Navigation from './components/Navigation'
 import { useState } from 'react'
@@ -75,6 +75,18 @@ function App() {
       data: [
         {id: 1,	code: "TN001",	street: "210 12th Street",	city: "Knoxville", state: "TN", zip: 37901, telephone:	8658874532},
         {id: 2,	code: "TN002",	street: "803 Liberty", city: "Chattanooga", state: "TN", zip:	37402, telephone: 4238864365}
+      ]
+    },
+    {
+      name: "Sales_has_Customers",
+      columns: ["sale_id", "customer_id"],
+      data: [
+        {sale_id: 1, customer_id: 1},
+        {sale_id: 2, customer_id: 2},
+        {sale_id: 3, customer_id: 3},
+        {sale_id: 4, customer_id: 1},
+        {sale_id: 5, customer_id: 4},
+        {sale_id: 5, customer_id: 5}
       ]
     }
   ]
