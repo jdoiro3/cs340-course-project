@@ -13,4 +13,4 @@ jobs:
       - run: | 
           cd app
           npm ci
-          npm run deploy
+          CI=false npm run deploy
