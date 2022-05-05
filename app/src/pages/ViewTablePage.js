@@ -19,7 +19,7 @@ function ViewTablePage({ entity, setRecordToEdit, recordToDelete, setRecordToDel
             <div className="container">
                 <div className="table-container">
                     <DatabaseTable entity={entity} onEdit={onEdit}></DatabaseTable>
-                    <Link to="/add-exercise">Add a record</Link>
+                    <Link to={`/add/${entity.name}`}>Add {entity.name}</Link>
                 </div>
             </div>
         </>
