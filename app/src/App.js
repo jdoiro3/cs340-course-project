@@ -13,12 +13,36 @@ function App() {
   const [recordToDelete, setRecordToDelete] = useState([])
 
   const entities = [
-    {name: "Models", columns: ["id", "manufacturer", "model", "model_year",	"generation",	"body_style_code"]},
-    {name: "Customers", columns: ["id", "first_name",	"last_name", "street", "apartment",	"city",	"state", "zip", "telephone", "email", "created_date"]},
-    {name: "Employees", columns: ["id",	"location_id", "type", "first_name", "last_name",	"work_telephone",	"work_email",	"hire_date", "termination_date"]},
-    {name: "Vehicles", columns: ["id",	"location_id", "model_id",	"vin",	"color",	"trim",	"mileage",	"is_used",	"date_acquired",	"price_paid",	"msrp"]},
-    {name: "Sales", columns: ["id", "employee_id", "vehicle_id", "location_id",	"date",	"purchase_price"]},
-    {name: "Locations", columns: ["id",	"code", "street",	"city",	"state", "zip", "telephone"]}
+    {
+      name: "Models", 
+      columns: ["id", "manufacturer", "model", "model_year",	"generation",	"body_style_code"],
+      data: [{id: 1, manufacturer: "Ford", model: "SUV", model_year: 2022, generation: 4, body_style_code: 2}]
+    },
+    {
+      name: "Customers", 
+      columns: ["id", "first_name",	"last_name", "street", "apartment",	"city",	"state", "zip", "telephone", "email", "created_date"],
+      data: [{}]
+    },
+    {
+      name: "Employees", 
+      columns: ["id",	"location_id", "type", "first_name", "last_name",	"work_telephone",	"work_email",	"hire_date", "termination_date"],
+      data: [{}]
+    },
+    {
+      name: "Vehicles", 
+      columns: ["id",	"location_id", "model_id",	"vin",	"color",	"trim",	"mileage",	"is_used",	"date_acquired",	"price_paid",	"msrp"],
+      data: [{}]
+    },
+    {
+      name: "Sales", 
+      columns: ["id", "employee_id", "vehicle_id", "location_id",	"date",	"purchase_price"],
+      data: [{}]
+    },
+    {
+      name: "Locations", 
+      columns: ["id",	"code", "street",	"city",	"state", "zip", "telephone"],
+      data: [{}]
+    }
   ]
 
   return (

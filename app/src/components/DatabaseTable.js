@@ -4,13 +4,13 @@ import Table from 'react-bootstrap/Table'
 import Dropdown from 'react-bootstrap/Dropdown'
 import './DatabaseTable.css'
 
-function DatabaseTable({ onEdit, tableName, columns }) {
+function DatabaseTable({ entity, onEdit }) {
 
     const [records, setRecords] = useState([])
 
     async function loadRecords() {
         // get records from table
-        setRecords(records)
+        setRecords(entity.data)
     }
 
     async function deleteAll() {
@@ -38,18 +38,20 @@ function DatabaseTable({ onEdit, tableName, columns }) {
                     Actions
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item href="/add-exercise">Add {tableName}</Dropdown.Item>
+                    <Dropdown.Item href="/add-exercise">Add {entity.name}</Dropdown.Item>
+                    <Dropdown.Item href="/add-exercise">Update {entity.name}</Dropdown.Item>
+                    <Dropdown.Item href="/add-exercise">Delete {entity.name}</Dropdown.Item>
                     <Dropdown.Item onClick={() => deleteAll()}>Delete All</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
             <Table className="table" striped bordered hover>
                 <thead>
                     <tr>
-                        {columns.map((col, i) => <th key={i}>{col}</th>)}
+                        {entity.columns.map((col, i) => <th key={i}>{col}</th>)}
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((r, i) => <Row values={r} key={i} onEdit={onEdit} onDelete={onDelete} />)}
+                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} onEdit={onEdit} onDelete={onDelete} />)}
                 </tbody>
             </Table>
         </div>
