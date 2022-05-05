@@ -25,7 +25,7 @@ function App() {
     <div className="App">
         <Navigation entities={entities}></Navigation>
         <header>
-          <h1>CS340 Database Admin</h1>
+          <h1>JD2 Motors Database Admin</h1>
           <p>
             This app lets you add, remove and update data.
           </p>
