@@ -81,7 +81,7 @@ function App() {
 
   return (
     <div className="App">
-      <HashRouter>
+      <HashRouter basename="/">
         <Navigation entities={entities}></Navigation>
         <header>
           <h1>JD2 Motors Database Admin</h1>
