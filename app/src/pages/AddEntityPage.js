@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import "./AddExercisePage.css"
 
-export default function AddExercisePage() {
+export default function AddEntityPage() {
 
     const [name, setName] = useState('')
     const [unit, setUnit] = useState('lbs')
