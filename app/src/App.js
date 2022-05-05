@@ -104,7 +104,7 @@ function App() {
         <Routes>
           {entities.map((e, i) => 
             <Route exact key={i} path={`/${e.name.toLowerCase()}`} element={
-                <ViewTablePage key={document.location.href} entity={e} recordToEdit={recordToEdit} setRecordToEdit={setRecordToEdit} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} />
+                <ViewTablePage entity={e} recordToEdit={recordToEdit} setRecordToEdit={setRecordToEdit} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} />
                 } 
             />
           )}
