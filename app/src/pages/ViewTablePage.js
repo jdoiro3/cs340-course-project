@@ -4,6 +4,7 @@ import DatabaseTable from '../components/DatabaseTable'
 import { useNavigate } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 import './ViewTablePage.css'
 
 function ViewTablePage({ entity, recordToEdit, setRecordToEdit, recordToDelete, setRecordToDelete }) {
@@ -26,8 +27,19 @@ function ViewTablePage({ entity, recordToEdit, setRecordToEdit, recordToDelete, 
                             <Modal.Title>Edit {entity.name} Entity</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            Editing {recordToEdit.id}
-                            {JSON.stringify(recordToEdit)}
+                            <Form>
+                                {Object.keys(recordToEdit).map(k =>
+                                    <Form.Group key={k} className="mb-3">
+                                        <Form.Label>{k}</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            value={recordToEdit[k]}
+                                            onChange={e => console.log(e)} 
+                                            autoFocus
+                                        />
+                                    </Form.Group>
+                                )}
+                            </Form>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={handleClose}>
