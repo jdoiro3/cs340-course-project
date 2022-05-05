@@ -2,7 +2,12 @@ import { BsPencilSquare } from 'react-icons/bs'
 import { MdDeleteOutline } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
 
-function Row({ entityInstance, columns, onEdit, onDelete }) {
+function Row({ entityInstance, columns, handleShow, onDelete, setRecordToEdit }) {
+
+    const onEdit = (entityInstance) => {
+        setRecordToEdit(entityInstance)
+        handleShow()
+    }
 
     return (
         <tr key={entityInstance.id}>

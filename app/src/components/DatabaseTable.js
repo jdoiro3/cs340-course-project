@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table'
 import Dropdown from 'react-bootstrap/Dropdown'
 import './DatabaseTable.css'
 
-function DatabaseTable({ entity, onEdit }) {
+function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
 
     const [records, setRecords] = useState([])
 
@@ -51,7 +51,7 @@ function DatabaseTable({ entity, onEdit }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} onEdit={onEdit} onDelete={onDelete} />)}
+                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleShow={handleShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
                 </tbody>
             </Table>
         </div>
