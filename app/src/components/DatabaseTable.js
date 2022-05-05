@@ -29,7 +29,7 @@ function DatabaseTable({ entity, onEdit }) {
 
     useEffect(() => {
         loadRecords()
-    }, [])
+    })
     
     return (
         <div>

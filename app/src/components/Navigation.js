@@ -1,6 +1,7 @@
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
+import { Link } from "react-router-dom";
 
 
 export default function Navigation({ entities }) {
@@ -11,7 +12,7 @@ export default function Navigation({ entities }) {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        {entities.map((e, i) => <Nav.Link key={i} href={`/${e.name.toLowerCase()}`}>{e.name}</Nav.Link>)}
+                        {entities.map((e, i) => <Nav.Link as={Link} key={i} to={`/${e.name.toLowerCase()}`}>{e.name}</Nav.Link>)}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

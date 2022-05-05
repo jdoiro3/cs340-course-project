@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { HashRouter, Routes, Route } from "react-router-dom"
 import ViewTablePage from './pages/ViewTablePage'
 import AddExercisePage from './pages/AddExercisePage'
 import EditExercisePage from './pages/EditExercisePage'
@@ -81,28 +81,26 @@ function App() {
 
   return (
     <div className="App">
+      <HashRouter>
         <Navigation entities={entities}></Navigation>
         <header>
           <h1>JD2 Motors Database Admin</h1>
           <p>
-            This app lets you add, remove, and update data.
+          This app lets you add, remove, and update data.
           </p>
         </header>
-        <main>
-          <BrowserRouter>
-            <Routes>
-              {entities.map((e, i) => 
-                <Route key={i} path={`/${e.name.toLowerCase()}`} element={
-                  <ViewTablePage entity={e} recordToEdit={recordToEdit} setRecordToEdit={setRecordToEdit} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} />
+        <Routes>
+          {entities.map((e, i) => 
+            <Route exact key={i} path={`/${e.name.toLowerCase()}`} element={
+                <ViewTablePage key={document.location.href} entity={e} recordToEdit={recordToEdit} setRecordToEdit={setRecordToEdit} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} />
                 } 
-                />
-              )}
-            </Routes>
-          </BrowserRouter>
-        </main>
-        <footer>
-          © 2022 Joseph Doiron & John DeRusso
-        </footer>
+            />
+          )}
+        </Routes>
+      </HashRouter>
+      <footer>
+        © 2022 Joseph Doiron & John DeRusso
+      </footer>
     </div>
   )
 }
