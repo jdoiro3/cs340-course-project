@@ -38,7 +38,7 @@ function DatabaseTable({ onEdit, tableName, columns }) {
                     Actions
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item href="/add-exercise">Add Exercise</Dropdown.Item>
+                    <Dropdown.Item href="/add-exercise">Add {tableName}</Dropdown.Item>
                     <Dropdown.Item onClick={() => deleteAll()}>Delete All</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>

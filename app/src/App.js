@@ -13,10 +13,12 @@ function App() {
   const [recordToDelete, setRecordToDelete] = useState([])
 
   const entities = [
-    {name: "Cars", columns: ["model", "year", "name"]},
+    {name: "Models", columns: ["id", "manufacturer", "model", "model_year",	"generation",	"body_style_code"]},
     {name: "Customers", columns: ["id", "first_name",	"last_name", "street", "apartment",	"city",	"state", "zip", "telephone", "email", "created_date"]},
     {name: "Employees", columns: ["id",	"location_id", "type", "first_name", "last_name",	"work_telephone",	"work_email",	"hire_date", "termination_date"]},
-    {name: "Vehicles", columns: ["id",	"location_id", "model_id",	"vin",	"color",	"trim",	"mileage",	"is_used",	"date_acquired",	"price_paid",	"msrp"]}
+    {name: "Vehicles", columns: ["id",	"location_id", "model_id",	"vin",	"color",	"trim",	"mileage",	"is_used",	"date_acquired",	"price_paid",	"msrp"]},
+    {name: "Sales", columns: ["id", "employee_id", "vehicle_id", "location_id",	"date",	"purchase_price"]},
+    {name: "Locations", columns: ["id",	"code", "street",	"city",	"state", "zip", "telephone"]}
   ]
 
   return (
