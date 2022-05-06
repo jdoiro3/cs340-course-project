@@ -30,7 +30,7 @@ function Filter({ columns }) {
 
 }
 
-function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
+function DatabaseTable({ entity, handleEditShow, handleAddShow, setRecordToEdit }) {
 
     const [records, setRecords] = useState([])
 
@@ -59,10 +59,10 @@ function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
     
     return (
         <div>
-                {
-                    entity.name == "Customers" &&
-                    <Filter columns={entity.columns}></Filter>
-                } 
+            {
+                entity.name == "Customers" &&
+                <Filter columns={entity.columns}></Filter>
+            } 
             <Table className="table" striped bordered hover>
                 <thead>
                     <tr>
@@ -70,9 +70,10 @@ function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleShow={handleShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
+                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
                 </tbody>
             </Table>
+            <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
         </div>
     )
 }
