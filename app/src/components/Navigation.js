@@ -8,7 +8,7 @@ export default function Navigation({ entities }) {
     return (
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand to="/">Database Admin</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/">JD2 Motors Database Admin</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
