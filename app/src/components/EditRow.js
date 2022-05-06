@@ -1,0 +1,48 @@
+import { useState, useEffect, React } from 'react'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+
+function EditRow({ recordToEdit, showEdit, handleEditClose }) {
+
+    const [record, setRecord] = useState(recordToEdit)
+    // on each render/change of recordToEdit set the record state variable
+    useEffect(() => { setRecord(recordToEdit)}, [recordToEdit] )
+
+    return (
+        <Modal show={showEdit} onHide={handleEditClose} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Edit {record.name} Entity</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    {Object.keys(record).map(k =>
+                        <Form.Group key={k} className="mb-3">
+                            <Form.Label>{k}</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={record[k]}
+                                onChange={e => {
+                                    let newRecord = {...record}
+                                    newRecord[k] = e.target.value
+                                    setRecord(newRecord)
+                                }} 
+                                autoFocus
+                            />
+                        </Form.Group>
+                    )}
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleEditClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleEditClose}>
+                    Save Changes
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
+
+export default EditRow
