@@ -9,7 +9,7 @@ function AddRow({ entity, showAdd, handleAddClose }) {
     entity.columns.forEach(c => initialRecord[c] = "")
     const [record, setRecord] = useState(initialRecord)
     // on each render/change of recordToEdit set the record state variable
-    useEffect(() => { setRecord(initialRecord)}, [initialRecord] )
+    useEffect(() => { setRecord(record)}, [record] )
 
     return (
         <Modal show={showAdd} onHide={handleAddClose} centered>
