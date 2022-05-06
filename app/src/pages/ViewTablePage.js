@@ -21,7 +21,6 @@ function ViewTablePage({ entity, recordToEdit, setRecordToEdit, recordToDelete, 
             <div className="container">
                 <div className="table-container">
                     <DatabaseTable entity={entity} handleShow={handleShow} setRecordToEdit={setRecordToEdit}></DatabaseTable>
-                    <Link to={`/add/${entity.name}`}>Add {entity.name}</Link>
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Header closeButton>
                             <Modal.Title>Edit {entity.name} Entity</Modal.Title>

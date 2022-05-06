@@ -1,8 +1,34 @@
 import Row from './Row'
 import { useState, useEffect } from 'react'
 import Table from 'react-bootstrap/Table'
-import Dropdown from 'react-bootstrap/Dropdown'
+import Form from 'react-bootstrap/Form'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
 import './DatabaseTable.css'
+
+function Filter({ columns }) {
+
+    const [filterCol, setFilterCol] = useState()
+
+    return (
+        <Form className='w-50'>
+            <Form.Group className="mb-3" >
+                <Form.Label>Filter</Form.Label>
+                <Form.Select aria-label="Column to Filter on" value={columns[0]} onChange={e => setFilterCol(e.target.value)}>
+                    {columns.map((c, i) => <option value={c}>{c}</option>)}
+                </Form.Select>
+            </Form.Group>
+            <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+                />
+            <Button variant="outline-success">Search</Button>
+        </Form>
+    )
+
+}
 
 function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
 
@@ -33,17 +59,10 @@ function DatabaseTable({ entity, handleShow, setRecordToEdit }) {
     
     return (
         <div>
-            <Dropdown className="table-dropdown">
-                <Dropdown.Toggle variant="success" id="Dropdown-basic">
-                    Actions
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item href="/add-exercise">Add {entity.name}</Dropdown.Item>
-                    <Dropdown.Item href="/add-exercise">Update {entity.name}</Dropdown.Item>
-                    <Dropdown.Item href="/add-exercise">Delete {entity.name}</Dropdown.Item>
-                    <Dropdown.Item onClick={() => deleteAll()}>Delete All</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
+                {
+                    entity.name == "Customers" &&
+                    <Filter columns={entity.columns}></Filter>
+                } 
             <Table className="table" striped bordered hover>
                 <thead>
                     <tr>
