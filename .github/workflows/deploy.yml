@@ -35,4 +35,5 @@ jobs:
       - name: list contents of home dir
         run: |
           ssh doironj@flip1.engr.oregonstate.edu
+          pwd
           ls -a
