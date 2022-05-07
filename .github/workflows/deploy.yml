@@ -22,7 +22,7 @@ jobs:
             deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
             publish_dir: ./app/build
   deploy-to-osu-server:
-    v
+    runs-on: ubuntu-latest
     steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
