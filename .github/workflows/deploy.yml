@@ -11,14 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: npm ci and build
-        run: |
-          cd app
-          npm ci
-          CI=false npm run build --if-present  
-      - name: deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./app/build
+      deploy-to-gh-pages:
+        - uses: actions/checkout@v2
+        - name: npm ci and build
+          run: |
+            cd app
+            npm ci
+            CI=false npm run build --if-present  
+        - name: deploy to gh-pages
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+            publish_dir: ./app/build
+      deploy-to-osu-server:
+        - name: Install SSH key
+          uses: shimataro/ssh-key-action@v2
+          with:
+            key: ${{ secrets.SSH_KEY }}
+            name: id_rsa
+            known_hosts: ${{ secrets.KNOWN_HOSTS }}
+            config: ${{ secrets.CONFIG }}
+            if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+        - name: list contents of home dir
+          run: |
+            ssh doironj@flip1.engr.oregonstate.edu
+            ls -a
