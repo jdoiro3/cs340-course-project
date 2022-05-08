@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        - name: npm ci and deploy-gh-pages
+        - name: npm ci and build
           run: |
             cd app
             npm ci
