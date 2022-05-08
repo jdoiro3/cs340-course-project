@@ -31,4 +31,4 @@ jobs:
             if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
         - name: Deploy to OSU Server
           run: |
-            scp ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340
+            scp -r ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340
