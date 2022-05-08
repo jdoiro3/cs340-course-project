@@ -21,10 +21,6 @@ jobs:
           with:
             deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
             publish_dir: ./app/build
-  deploy-to-osu-server:
-    needs: deploy-to-gh-pages
-    runs-on: ubuntu-latest
-    steps:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -33,6 +29,6 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           config: ${{ secrets.CONFIG }}
           if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
-      - name: list contents of home dir
+      - name: Deploy to OSU Server
         run: |
-          scp ./app/build/ doironj@flip1.engr.oregonstate.edu:~/cs340
+          scp ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340
