@@ -26,13 +26,16 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
+        - name: update public url
+          run: |
+            touch app/.env
+            echo "PUBLIC_URL=http://flip1.engr.oregonstate.edu/nfs/stak/users/doironj/cs340/final-project" > app/.env
+            cat app/.env
         - name: npm ci and build
           run: |
             cd app
             npm ci
             CI=false npm run build --if-present 
-          env:
-            PUBLIC_URL: http://flip1.engr.oregonstate.edu/nfs/stak/users/doironj/cs340/final-project
         - name: Install SSH key
           uses: shimataro/ssh-key-action@v2
           with:
