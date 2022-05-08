@@ -1,7 +1,7 @@
 {
   "name": "database-admin-app",
   "version": "0.1.0",
-  "homepage": "https://flip1.engr.oregonstate.edu:1521/cs340-course-project",
+  "homepage": "https://jdoiro3.github.io/cs340-course-project",
   "private": true,
   "proxy": "http://localhost:3000",
   "dependencies": {
