@@ -28,9 +28,9 @@ jobs:
         - uses: actions/checkout@v2
         - name: update public url
           run: |
-            touch app/.env
-            echo "PUBLIC_URL=http://flip1.engr.oregonstate.edu/nfs/stak/users/doironj/cs340/final-project" > app/.env
-            cat app/.env
+            npm install -g json
+            json -I -f app/package.json -e "this.homepage=\"http://flip1.engr.oregonstate.edu/nfs/stak/users/doironj/cs340/final-project\""
+            cat app/package.json
         - name: npm ci and build
           run: |
             cd app
