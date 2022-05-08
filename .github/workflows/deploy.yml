@@ -22,6 +22,7 @@ jobs:
             deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
             publish_dir: ./app/build
   deploy-to-osu-server:
+    needs: deploy-to-gh-pages
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH key
@@ -34,6 +35,4 @@ jobs:
           if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
       - name: list contents of home dir
         run: |
-          ssh doironj@flip1.engr.oregonstate.edu
-          pwd
-          ls -a
+          scp ./app/build/ doironj@flip1.engr.oregonstate.edu:~/cs340
