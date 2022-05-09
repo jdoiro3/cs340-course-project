@@ -2,11 +2,11 @@
 
 export function getSaleOptions(entities) {
     let sales = entities.filter(e => e.name === "Sales")[0].data
+    let options = []
     sales.forEach(s => {
-        s.value = s.id
-        s.label = `Sale ${s.id} on ${s.date}`
+        options.push({value: s.id, label: `Sale ${s.id} on ${s.date}`, ...s})
     })
-    return sales
+    return options
 }
 
 export function getCustomerSales(entities, customerID) {
@@ -14,9 +14,9 @@ export function getCustomerSales(entities, customerID) {
     let customer_sale_ids = saleHasCust.filter(rec => rec.customer_id === customerID).map(s => s.sale_id)
     let sales = entities.filter(e => e.name === "Sales")[0].data
     let customer_sales = sales.filter(c => customer_sale_ids.includes(c.id))
+    let edit_values = []
     customer_sales.forEach(s => {
-        s.value = s.id
-        s.label = `Sale ${s.id} on ${s.date}`
+        edit_values.push({value: s.id, label: `Sale ${s.id} on ${s.date}`, ...s})
     })
-    return customer_sales
+    return edit_values
 }
