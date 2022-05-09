@@ -6,7 +6,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import './DatabaseTable.css'
 
-function Filter({ columns }) {
+function TableFilter({ columns }) {
 
     const [filterCol, setFilterCol] = useState()
 
@@ -59,10 +59,7 @@ function DatabaseTable({ entity, handleEditShow, handleAddShow, setRecordToEdit 
     
     return (
         <div>
-            {
-                entity.name == "Customers" &&
-                <Filter columns={entity.columns}></Filter>
-            } 
+            {entity.name === "Customers" && <TableFilter columns={entity.columns}></TableFilter>} 
             <Table className="table" striped bordered hover>
                 <thead>
                     <tr>

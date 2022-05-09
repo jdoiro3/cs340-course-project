@@ -2,8 +2,11 @@ import { useState, useEffect, React } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
+import Select from 'react-select'
+import { getCustomerOptions, getSaleCustomers } from '../util/customers'
+import entities from '../util/temp-data'
 
-function EditRow({ recordToEdit, showEdit, handleEditClose }) {
+function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
 
     const [record, setRecord] = useState(recordToEdit)
     // on each render/change of recordToEdit set the record state variable
@@ -31,6 +34,20 @@ function EditRow({ recordToEdit, showEdit, handleEditClose }) {
                             />
                         </Form.Group>
                     )}
+                    {
+                        entityName === "Sales" &&
+                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
+                            <Form.Label>Customers</Form.Label>
+                            <Select
+                                defaultValue={() => getSaleCustomers(entities, recordToEdit.id)}
+                                isMulti
+                                name="colors"
+                                options={getCustomerOptions(entities)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
+                        </Form.Group>
+                    }
                 </Form>
             </Modal.Body>
             <Modal.Footer>

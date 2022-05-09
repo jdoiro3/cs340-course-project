@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom'
 
 function ViewTablePage({ entity, recordToDelete, setRecordToDelete }) {
 
-    const navigate = useNavigate()
-
     const [recordToEdit, setRecordToEdit] = useState([])
 
     // used for the edit modal/form
@@ -26,7 +24,7 @@ function ViewTablePage({ entity, recordToDelete, setRecordToDelete }) {
             <div className="container">
                 <div className="table-container">
                     <DatabaseTable entity={entity} handleEditShow={handleEditShow} handleAddShow={handleAddShow} setRecordToEdit={setRecordToEdit}></DatabaseTable>
-                    <EditRow recordToEdit={recordToEdit} showEdit={showEdit} handleEditClose={handleEditClose}></EditRow>
+                    <EditRow entityName={entity.name} recordToEdit={recordToEdit} showEdit={showEdit} handleEditClose={handleEditClose}></EditRow>
                     <AddRow entity={entity} showAdd={showAdd} handleAddClose={handleAddClose}></AddRow>
                 </div>
             </div>

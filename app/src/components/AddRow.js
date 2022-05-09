@@ -2,11 +2,15 @@ import { useState, useEffect, React } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
+import Select from 'react-select'
+import { getCustomerOptions } from '../util/customers'
+import entities from '../util/temp-data'
 
 function AddRow({ entity, showAdd, handleAddClose }) {
 
     let initialRecord = {}
     entity.columns.forEach(c => initialRecord[c] = "")
+
     const [record, setRecord] = useState(initialRecord)
     // on each render/change of recordToEdit set the record state variable
     useEffect(() => { setRecord(record)}, [record] )
@@ -33,6 +37,20 @@ function AddRow({ entity, showAdd, handleAddClose }) {
                             />
                         </Form.Group>
                     )}
+                    {
+                        entity.name === "Sales" &&
+                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
+                            <Form.Label>Customers</Form.Label>
+                            <Select
+                                defaultValue={[]}
+                                isMulti
+                                name="colors"
+                                options={getCustomerOptions(entities)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
+                        </Form.Group>
+                    }
                 </Form>
             </Modal.Body>
             <Modal.Footer>
