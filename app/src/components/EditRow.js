@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import { getCustomerOptions, getSaleCustomers } from '../util/customers'
+import { getSaleOptions, getCustomerSales } from '../util/sales'
 import entities from '../util/temp-data'
 
 function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
@@ -43,6 +44,20 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
                                 isMulti
                                 name="colors"
                                 options={getCustomerOptions(entities)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
+                        </Form.Group>
+                    }
+                    {
+                        entityName === "Customers" &&
+                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
+                            <Form.Label>Sales</Form.Label>
+                            <Select
+                                defaultValue={() => getCustomerSales(entities, recordToEdit.id)}
+                                isMulti
+                                name="colors"
+                                options={getSaleOptions(entities)}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />

@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import { getCustomerOptions } from '../util/customers'
+import { getSaleOptions } from '../util/sales'
 import entities from '../util/temp-data'
 
 function AddRow({ entity, showAdd, handleAddClose }) {
@@ -46,6 +47,20 @@ function AddRow({ entity, showAdd, handleAddClose }) {
                                 isMulti
                                 name="colors"
                                 options={getCustomerOptions(entities)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
+                        </Form.Group>
+                    }
+                    {
+                        entity.name === "Customers" &&
+                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
+                            <Form.Label>Sales</Form.Label>
+                            <Select
+                                defaultValue={[]}
+                                isMulti
+                                name="colors"
+                                options={getSaleOptions(entities)}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />
