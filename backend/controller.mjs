@@ -9,6 +9,7 @@ import fs from 'fs'
 
 const app = express()
 const PORT = 39182
+const jsonParser = bodyParser.json()
 
 app.use(express.json())
 
@@ -29,6 +30,24 @@ app.get(`/:table`, async (req, res) => {
     columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
     let entity = {name: req.params.table, columns: columns, data: records}
     res.status(200).type('json').json(entity)
+})
+
+app.post(`/:table/:_id`, jsonParser, async (req, res) => {
+    let table = req.params.table
+    let _id = req.params._id
+    let values = req.body // {column: value}
+    // insert new record into table
+})
+
+app.put(`/:table`, jsonParser, async (req, res) => {
+    let table = req.params.table
+    let _id = req.params._id
+    let values = req.body // {column: value}
+    // update record in table
+})
+
+app.delete(`/:table/:_id`, async (req, res) => {
+    // delete a table record
 })
 
 /**
