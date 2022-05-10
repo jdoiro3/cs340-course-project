@@ -45,7 +45,7 @@ SET time_zone = "+00:00";
 --
 DROP TABLE IF EXISTS `Customers`;
 CREATE TABLE `Customers` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `street` varchar(200) NOT NULL,
@@ -55,7 +55,9 @@ CREATE TABLE `Customers` (
   `zip` char(5) NOT NULL,
   `telephone` char(10) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `created_date` date NOT NULL
+  `created_date` date NOT NULL,
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `Customer_id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -65,7 +67,7 @@ CREATE TABLE `Customers` (
 --
 DROP TABLE IF EXISTS `Employees`;
 CREATE TABLE `Employees` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `location_id` int(11) NOT NULL,
   `type` varchar(5) NOT NULL,
   `first_name` varchar(100) NOT NULL,
@@ -73,7 +75,11 @@ CREATE TABLE `Employees` (
   `work_telephone` char(10) NOT NULL,
   `work_email` varchar(100) NOT NULL,
   `hire_date` date NOT NULL,
-  `termination_date` date DEFAULT '9999-12-31'
+  `termination_date` date DEFAULT '9999-12-31',
+  ADD PRIMARY KEY (`id`,`location_id`),
+  ADD UNIQUE KEY `id_UNIQUE` (`id`),
+  ADD KEY `fk_Employees_Locations1_idx` (`location_id`),
+  ADD CONSTRAINT `fk_Employees_Locations1` FOREIGN KEY (`location_id`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -83,13 +89,16 @@ CREATE TABLE `Employees` (
 --
 DROP TABLE IF EXISTS `Locations`;
 CREATE TABLE `Locations` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(5) NOT NULL,
   `street` varchar(200) NOT NULL,
   `city` varchar(100) NOT NULL,
   `state` char(2) NOT NULL,
   `zip` char(5) NOT NULL,
-  `telephone` char(10) NOT NULL
+  `telephone` char(10) NOT NULL,
+    ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `Location_id_UNIQUE` (`id`),
+  ADD UNIQUE KEY `code_UNIQUE` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -99,12 +108,14 @@ CREATE TABLE `Locations` (
 --
 DROP TABLE IF EXISTS `Models`;
 CREATE TABLE `Models` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `manufacturer` varchar(100) NOT NULL,
   `model` varchar(100) NOT NULL,
   `model_year` year(4) NOT NULL,
   `generation` int(11) NOT NULL,
-  `body_style_code` varchar(5) NOT NULL
+  `body_style_code` varchar(5) NOT NULL,
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `Model_id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -114,12 +125,20 @@ CREATE TABLE `Models` (
 --
 DROP TABLE IF EXISTS `Sales`;
 CREATE TABLE `Sales` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `employee_id` int(11) NOT NULL,
   `vehicle_id` int(11) NOT NULL,
   `location_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `purchase_price` decimal(15,2) NOT NULL
+  `purchase_price` decimal(15,2) NOT NULL,
+  ADD PRIMARY KEY (`id`,`employee_id`,`vehicle_id`,`location_id`),
+  ADD UNIQUE KEY `id_UNIQUE` (`id`),
+  ADD KEY `fk_Sales_Employees1_idx` (`employee_id`),
+  ADD KEY `fk_Sales_Vehicles1_idx` (`vehicle_id`),
+  ADD KEY `fk_Sales_Locations1_idx` (`location_id`),
+  ADD CONSTRAINT `fk_Sales_Employees1` FOREIGN KEY (`employee_id`) REFERENCES `Employees` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Sales_Locations1` FOREIGN KEY (`location_id`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Sales_Vehicles1` FOREIGN KEY (`vehicle_id`) REFERENCES `Vehicles` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -129,8 +148,13 @@ CREATE TABLE `Sales` (
 --
 DROP TABLE IF EXISTS `Sales_has_Customers`;
 CREATE TABLE `Sales_has_Customers` (
-  `sale_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL
+  `sale_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  ADD PRIMARY KEY (`sale_id`,`customer_id`),
+  ADD KEY `fk_Sales_has_Customers_Customers1_idx` (`customer_id`),
+  ADD KEY `fk_Sales_has_Customers_Sales_idx` (`sale_id`),
+  ADD CONSTRAINT `fk_Sales_has_Customers_Customers` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Sales_has_Customers_Sales` FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -140,7 +164,7 @@ CREATE TABLE `Sales_has_Customers` (
 --
 DROP TABLE IF EXISTS `Vehicles`;
 CREATE TABLE `Vehicles` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `location_id` int(11) NOT NULL,
   `model_id` int(11) NOT NULL,
   `vin` varchar(100) NOT NULL,
@@ -150,146 +174,15 @@ CREATE TABLE `Vehicles` (
   `is_used` tinyint(1) NOT NULL,
   `date_acquired` date NOT NULL,
   `price_paid` decimal(15,2) NOT NULL,
-  `msrp` decimal(15,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `Customers`
---
-ALTER TABLE `Customers`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Customer_id_UNIQUE` (`id`);
-
---
--- Indexes for table `Employees`
---
-ALTER TABLE `Employees`
-  ADD PRIMARY KEY (`id`,`location_id`),
-  ADD UNIQUE KEY `id_UNIQUE` (`id`),
-  ADD KEY `fk_Employees_Locations1_idx` (`location_id`);
-
---
--- Indexes for table `Locations`
---
-ALTER TABLE `Locations`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Location_id_UNIQUE` (`id`),
-  ADD UNIQUE KEY `code_UNIQUE` (`code`);
-
---
--- Indexes for table `Models`
---
-ALTER TABLE `Models`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Model_id_UNIQUE` (`id`);
-
---
--- Indexes for table `Sales`
---
-ALTER TABLE `Sales`
-  ADD PRIMARY KEY (`id`,`employee_id`,`vehicle_id`,`location_id`),
-  ADD UNIQUE KEY `id_UNIQUE` (`id`),
-  ADD KEY `fk_Sales_Employees1_idx` (`employee_id`),
-  ADD KEY `fk_Sales_Vehicles1_idx` (`vehicle_id`),
-  ADD KEY `fk_Sales_Locations1_idx` (`location_id`);
-
---
--- Indexes for table `Sales_has_Customers`
---
-ALTER TABLE `Sales_has_Customers`
-  ADD PRIMARY KEY (`sale_id`,`customer_id`),
-  ADD KEY `fk_Sales_has_Customers_Customers1_idx` (`customer_id`),
-  ADD KEY `fk_Sales_has_Customers_Sales_idx` (`sale_id`);
-
---
--- Indexes for table `Vehicles`
---
-ALTER TABLE `Vehicles`
+  `msrp` decimal(15,2) NOT NULL,
   ADD PRIMARY KEY (`id`,`location_id`,`model_id`),
   ADD UNIQUE KEY `vehicle_id_UNIQUE` (`id`),
   ADD UNIQUE KEY `vin_UNIQUE` (`vin`),
   ADD KEY `fk_Vehicles_Locations1_idx` (`location_id`),
-  ADD KEY `fk_Vehicles_Model1_idx` (`model_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `Customers`
---
-ALTER TABLE `Customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Employees`
---
-ALTER TABLE `Employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Locations`
---
-ALTER TABLE `Locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Models`
---
-ALTER TABLE `Models`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Sales`
---
-ALTER TABLE `Sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Vehicles`
---
-ALTER TABLE `Vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `Employees`
---
-ALTER TABLE `Employees`
-  ADD CONSTRAINT `fk_Employees_Locations1` FOREIGN KEY (`location_id`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Constraints for table `Sales`
---
-ALTER TABLE `Sales`
-  ADD CONSTRAINT `fk_Sales_Employees1` FOREIGN KEY (`employee_id`) REFERENCES `Employees` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Sales_Locations1` FOREIGN KEY (`location_id`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Sales_Vehicles1` FOREIGN KEY (`vehicle_id`) REFERENCES `Vehicles` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Constraints for table `Sales_has_Customers`
---
-ALTER TABLE `Sales_has_Customers`
-  ADD CONSTRAINT `fk_Sales_has_Customers_Customers` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Sales_has_Customers_Sales` FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `Vehicles`
---
-ALTER TABLE `Vehicles`
+  ADD KEY `fk_Vehicles_Model1_idx` (`model_id`),
   ADD CONSTRAINT `fk_Vehicles_Locations1` FOREIGN KEY (`location_id`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_Vehicles_Model1` FOREIGN KEY (`model_id`) REFERENCES `Models` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  ADD CONSTRAINT `fk_Vehicles_Model1` FOREIGN KEY (`model_id`) REFERENCES `Models` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 
 -- insert sample data into the tables
