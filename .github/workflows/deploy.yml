@@ -34,7 +34,9 @@ jobs:
             json -I -f package.json -e "this.homepage=\"http://flip1.engr.oregonstate.edu\""
             cat package.json
             CI=false npm run build --if-present
-            cat build/index.html
+            cd ../backend
+            json -I -f connSettings.json -e "this.user=\"${{ secrets.DB_USER }}\""
+            json -I -f connSettings.json -e "this.password=\"${{ secrets.DB_PASSWORD }}\""
         - name: Install SSH key
           uses: shimataro/ssh-key-action@v2
           with:
@@ -46,3 +48,4 @@ jobs:
         - name: Deploy to OSU Server
           run: |
             scp -r ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
+            scp -r ./backend doironj@flip1.engr.oregonstate.edu:~/cs340/final-project

@@ -1,0 +1,8 @@
+{
+    "connectionLimit": 10,
+    "host": "classmysql.engr.oregonstate.edu",
+    "user": "",
+    "password": "",
+    "database": "JD2MOTORS",
+    "multipleStatements": true
+}

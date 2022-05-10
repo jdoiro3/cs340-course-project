@@ -5,15 +5,16 @@
 
 // Get an instance of mysql we can use in the app
 import mysql from 'mysql'
+import util from 'util'
+import fs from 'fs'
+
+let connSettings = JSON.parse(fs.readFileSync('connSettings.json', 'utf8'));
 
 // Create a 'connection pool' using the provided credentials
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: 'classmysql.engr.oregonstate.edu',
-    user: 'cs340_derussoj',
-    password: 'w0EL6rNP75D7E#wl0',
-    database: 'cs340_derussoj'
-})
+let pool = mysql.createPool(connSettings)
+
+// promisify the query method
+pool.query = util.promisify(pool.query).bind(pool)
 
 // Export it for use in our application
 export { pool }
