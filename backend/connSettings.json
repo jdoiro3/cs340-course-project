@@ -3,6 +3,6 @@
     "host": "classmysql.engr.oregonstate.edu",
     "user": "",
     "password": "",
-    "database": "JD2MOTORS",
+    "database": "cs340_doironj",
     "multipleStatements": true
 }

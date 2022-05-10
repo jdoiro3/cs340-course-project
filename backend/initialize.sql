@@ -5,9 +5,7 @@
 
 -- Data Definition Queries
 
-DROP DATABASE JD2MOTORS;
-CREATE DATABASE JD2MOTORS;
-USE JD2MOTORS;
+USE cs340_doironj;
 
 
 -- citation:
