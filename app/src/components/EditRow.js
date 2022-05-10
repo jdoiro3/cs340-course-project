@@ -16,7 +16,7 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
     return (
         <Modal show={showEdit} onHide={handleEditClose} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Edit {record.name} Entity</Modal.Title>
+                <Modal.Title>Edit {entityName} Entity</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>

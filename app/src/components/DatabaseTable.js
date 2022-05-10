@@ -8,23 +8,25 @@ import './DatabaseTable.css'
 
 function TableFilter({ columns }) {
 
-    const [filterCol, setFilterCol] = useState()
+    const [filterCol, setFilterCol] = useState(columns[0])
 
     return (
-        <Form className='w-50'>
+        <Form className="tableFilter">
             <Form.Group className="mb-3" >
-                <Form.Label>Filter</Form.Label>
-                <Form.Select aria-label="Column to Filter on" value={columns[0]} onChange={e => setFilterCol(e.target.value)}>
+                <Form.Label>Filter On</Form.Label>
+                <Form.Select aria-label="Column to Filter on" value={filterCol} onChange={e => setFilterCol(e.target.value)}>
                     {columns.map((c, i) => <option value={c}>{c}</option>)}
                 </Form.Select>
             </Form.Group>
-            <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-                />
-            <Button variant="outline-success">Search</Button>
+            <div className="filterSearch">
+                <FormControl
+                    type="search"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                    />
+                <Button variant="outline-success">Search</Button>
+            </div>
         </Form>
     )
 

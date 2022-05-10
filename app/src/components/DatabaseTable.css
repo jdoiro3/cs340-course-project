@@ -1,2 +1,11 @@
 .table {
 }
+
+.tableFilter {
+    width: 30%;
+}
+
+.filterSearch {
+    display: flex;
+    margin-bottom: 10%;
+}
