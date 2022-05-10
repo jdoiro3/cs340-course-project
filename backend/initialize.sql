@@ -12,6 +12,13 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 DROP TABLE IF EXISTS `Customers`;
+DROP TABLE IF EXISTS `Employees`;
+DROP TABLE IF EXISTS `Locations`;
+DROP TABLE IF EXISTS `Models`;
+DROP TABLE IF EXISTS `Sales`;
+DROP TABLE IF EXISTS `Sales_has_Customers`;
+DROP TABLE IF EXISTS `Vehicles`;
+
 CREATE TABLE `Customers` (
   `id` int(11) NOT NULL,
   `first_name` varchar(100) NOT NULL,
@@ -26,7 +33,6 @@ CREATE TABLE `Customers` (
   `created_date` date NOT NULL
 ) ENGINE = innoDB;
 
-DROP TABLE IF EXISTS `Employees`;
 CREATE TABLE `Employees` (
   `id` int(11) NOT NULL,
   `location_id` int(11) NOT NULL,
@@ -39,7 +45,6 @@ CREATE TABLE `Employees` (
   `termination_date` date DEFAULT '9999-12-31'
 ) ENGINE = innoDB;
 
-DROP TABLE IF EXISTS `Locations`;
 CREATE TABLE `Locations` (
   `id` int(11) NOT NULL,
   `code` varchar(5) NOT NULL,
@@ -50,7 +55,6 @@ CREATE TABLE `Locations` (
   `telephone` char(10) NOT NULL
 );
 
-DROP TABLE IF EXISTS `Models`;
 CREATE TABLE `Models` (
   `id` int(11) NOT NULL,
   `manufacturer` varchar(100) NOT NULL,
@@ -60,7 +64,6 @@ CREATE TABLE `Models` (
   `body_style_code` varchar(5) NOT NULL
 ) ENGINE = innoDB;
 
-DROP TABLE IF EXISTS `Sales`;
 CREATE TABLE `Sales` (
   `id` int(11) NOT NULL,
   `employee_id` int(11) NOT NULL,
@@ -70,13 +73,11 @@ CREATE TABLE `Sales` (
   `purchase_price` decimal(15,2) NOT NULL
 ) ENGINE = innoDB;
 
-DROP TABLE IF EXISTS `Sales_has_Customers`;
 CREATE TABLE `Sales_has_Customers` (
   `sale_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL
 ) ENGINE = innoDB;
 
-DROP TABLE IF EXISTS `Vehicles`;
 CREATE TABLE `Vehicles` (
   `id` int(11) NOT NULL,
   `location_id` int(11) NOT NULL,
