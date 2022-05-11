@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://jdoiro3.github.io/cs340-course-project",
   "private": true,
-  "proxy": "http://localhost:3000",
+  "proxy": "http://localhost:39182",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
@@ -13,6 +13,7 @@
     "react-bootstrap": "^2.2.1",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-loader-spinner": "^6.0.0-0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.2.2",
     "react-script": "^2.0.5",

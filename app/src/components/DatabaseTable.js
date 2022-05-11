@@ -15,7 +15,7 @@ function TableFilter({ columns }) {
             <Form.Group className="mb-3" >
                 <Form.Label>Filter On</Form.Label>
                 <Form.Select aria-label="Column to Filter on" value={filterCol} onChange={e => setFilterCol(e.target.value)}>
-                    {columns.map((c, i) => <option value={c}>{c}</option>)}
+                    {columns.map((c, i) => <option key={i} value={c}>{c}</option>)}
                 </Form.Select>
             </Form.Group>
             <div className="filterSearch">
@@ -32,32 +32,7 @@ function TableFilter({ columns }) {
 
 }
 
-function DatabaseTable({ entity, handleEditShow, handleAddShow, setRecordToEdit }) {
-
-    const [records, setRecords] = useState([])
-
-    async function loadRecords() {
-        // get records from table
-        setRecords(entity.data)
-    }
-
-    async function deleteAll() {
-        // delete all records
-        loadRecords()
-    }
-
-    async function deleteRecord(record) {
-        // deletes a record from the table
-    }
-
-    const onDelete = async (record) => {
-        deleteRecord(record)
-        loadRecords()
-    }
-
-    useEffect(() => {
-        loadRecords()
-    })
+function DatabaseTable({ entity, onDelete, handleEditShow, handleAddShow, setRecordToEdit }) {
     
     return (
         <div>
@@ -69,7 +44,7 @@ function DatabaseTable({ entity, handleEditShow, handleAddShow, setRecordToEdit 
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
+                    {entity.data.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
                 </tbody>
             </Table>
             <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>

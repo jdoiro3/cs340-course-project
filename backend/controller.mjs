@@ -4,6 +4,7 @@ import * as db from './db-connector.mjs'
 import express from 'express'
 import { executeQuery } from './util.mjs'
 import fs from 'fs'
+import bodyParser from 'body-parser'
 
 // constants
 
@@ -21,15 +22,41 @@ app.get(`/initialize`, async (req, res) => {
     })
 })
 
+app.get('/tables', async (req, res) => {
+    let tables = await executeQuery(db.pool, 'SHOW TABLES;')
+    tables.forEach((t, i) => tables[i] = t.Tables_in_cs340_doironj)
+    res.status(200).type('json').json(tables)
+})
+
 app.get(`/:table`, async (req, res) => {
-    let records = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+    let data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
     let columns = await executeQuery(
         db.pool, 
         `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
         )
     columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
-    let entity = {name: req.params.table, columns: columns, data: records}
+    let entity = {name: req.params.table, columns, data}
     res.status(200).type('json').json(entity)
+})
+
+app.get('/tables/data', async (req, res) => {
+    let tables = await executeQuery(db.pool, 'SHOW TABLES;')
+    tables.forEach((t, i) => tables[i] = t.Tables_in_cs340_doironj)
+    let entities = []
+    for (let table of tables) {
+        let columns = await executeQuery(
+            db.pool, 
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table}';`
+            )
+        columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
+        if (req.params.only_columns) {
+            entities.push({name: table, columns})
+        } else {
+            let data = await executeQuery(db.pool, `SELECT * FROM ${table};`)
+            entities.push({name: table, columns, data})
+        }
+    }
+    res.status(200).type('json').json(entities)
 })
 
 app.post(`/:table/:_id`, jsonParser, async (req, res) => {

@@ -5,7 +5,6 @@ import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import { getCustomerOptions } from '../util/customers'
 import { getSaleOptions } from '../util/sales'
-import entities from '../util/temp-data'
 
 function AddRow({ entity, showAdd, handleAddClose }) {
 
@@ -46,7 +45,7 @@ function AddRow({ entity, showAdd, handleAddClose }) {
                                 defaultValue={[]}
                                 isMulti
                                 name="colors"
-                                options={getCustomerOptions(entities)}
+                                options={[] /*getCustomerOptions(entities)*/}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />
@@ -60,7 +59,7 @@ function AddRow({ entity, showAdd, handleAddClose }) {
                                 defaultValue={[]}
                                 isMulti
                                 name="colors"
-                                options={getSaleOptions(entities)}
+                                options={[] /*getSaleOptions(entities)*/}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />
