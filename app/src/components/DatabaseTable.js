@@ -32,7 +32,7 @@ function TableFilter({ columns }) {
 
 }
 
-function DatabaseTable({ entity, onDelete, handleEditShow, handleAddShow, setRecordToEdit }) {
+function DatabaseTable({ entity, onDelete, setSaleCustomers, handleEditShow, handleAddShow, setRecordToEdit }) {
     
     return (
         <div>
@@ -44,7 +44,7 @@ function DatabaseTable({ entity, onDelete, handleEditShow, handleAddShow, setRec
                     </tr>
                 </thead>
                 <tbody>
-                    {entity.data.map((r, i) => <Row columns={entity.columns} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
+                    {entity.data.map((r, i) => <Row entityName={entity.name} columns={entity.columns} setSaleCustomers={setSaleCustomers} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
                 </tbody>
             </Table>
             <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>

@@ -7,11 +7,14 @@ import { getCustomerOptions, getSaleCustomers } from '../util/customers'
 import { getSaleOptions, getCustomerSales } from '../util/sales'
 import entities from '../util/temp-data'
 
-function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
+function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCustomers, customerOptions }) {
 
     const [record, setRecord] = useState(recordToEdit)
+
     // on each render/change of recordToEdit set the record state variable
-    useEffect(() => { setRecord(recordToEdit)}, [recordToEdit] )
+    useEffect(() => { 
+        setRecord(recordToEdit)
+    }, [recordToEdit])
 
     return (
         <Modal show={showEdit} onHide={handleEditClose} centered>
@@ -25,7 +28,7 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
                             <Form.Label>{k}</Form.Label>
                             <Form.Control 
                                 type="text" 
-                                value={record[k]}
+                                value={record[k] === null ? "": record[k]}
                                 onChange={e => {
                                     let newRecord = {...record}
                                     newRecord[k] = e.target.value
@@ -40,10 +43,10 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose }) {
                         <Form.Group key={Object.keys(record).length + 1} className="mb-3">
                             <Form.Label>Customers</Form.Label>
                             <Select
-                                defaultValue={() => getSaleCustomers(entities, recordToEdit.id)}
+                                defaultValue={() => salesCustomers}
                                 isMulti
                                 name="colors"
-                                options={getCustomerOptions(entities)}
+                                options={customerOptions}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />

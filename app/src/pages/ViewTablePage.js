@@ -4,10 +4,12 @@ import DatabaseTable from '../components/DatabaseTable'
 import EditRow from '../components/EditRow'
 import AddRow from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
+import { getCustomerOptions } from '../util/customers'
 
 function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
 
     const [recordToEdit, setRecordToEdit] = useState({})
+    const [entity, setEntity] = useState()
     // used for the edit modal/form
     const [showEdit, setEditShow] = useState(false)
     const handleEditClose = () => setEditShow(false)
@@ -16,8 +18,14 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     const [showAdd, setAddShow] = useState(false)
     const handleAddClose = () => setAddShow(false)
     const handleAddShow = () => setAddShow(true)
+    // used for sales edit row
+    const [salesCustomers, setSaleCustomers] = useState([])
+    const [customerOptions, setCustomerOptions] = useState([])
 
-    const [entity, setEntity] = useState()
+    async function loadCustomerOptions() {
+        let customers = await getCustomerOptions()
+        setCustomerOptions(customers)
+    }
 
     async function loadEntity() {
         let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
@@ -28,6 +36,9 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     useEffect(() => {
         setEntity(undefined)
         loadEntity()
+        if (entityName === "Sales") {
+            loadCustomerOptions()
+        }
     }, [entityName])
 
     async function deleteRecord(record) {
@@ -56,8 +67,22 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                 <h2>{entityName} Table</h2>
                 <div className="container">
                     <div className="table-container">
-                        <DatabaseTable entity={entity} onDelete={onDelete} handleEditShow={handleEditShow} handleAddShow={handleAddShow} setRecordToEdit={setRecordToEdit}></DatabaseTable>
-                        <EditRow entity={entity} recordToEdit={recordToEdit} showEdit={showEdit} handleEditClose={handleEditClose}></EditRow>
+                        <DatabaseTable 
+                            entity={entity} 
+                            onDelete={onDelete} 
+                            handleEditShow={handleEditShow} 
+                            handleAddShow={handleAddShow} 
+                            setRecordToEdit={setRecordToEdit}
+                            setSaleCustomers={setSaleCustomers}
+                        ></DatabaseTable>
+                        <EditRow 
+                            entityName={entityName} 
+                            recordToEdit={recordToEdit} 
+                            salesCustomers={salesCustomers}
+                            customerOptions={customerOptions}
+                            showEdit={showEdit} 
+                            handleEditClose={handleEditClose}
+                        ></EditRow>
                         <AddRow entity={entity} showAdd={showAdd} handleAddClose={handleAddClose}></AddRow>
                     </div>
                 </div>
