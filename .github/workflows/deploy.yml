@@ -41,4 +41,7 @@ jobs:
             username: doironj
             key: ${{ secrets.SSH_KEY }}
             script: |
-              ls -a
+              cd cs340/final-project/app
+              npm install
+              cd ../backend
+              npm install
