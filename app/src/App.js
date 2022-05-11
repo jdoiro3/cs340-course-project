@@ -14,7 +14,7 @@ function App() {
   const [tables, setTableNames] = useState([])
 
   async function getTableNames() {
-    let resp = await fetch('tables')
+    let resp = await fetch('http://flip1.engr.oregonstate.edu:39182/tables')
     let tables = await resp.json()
     setTableNames(tables)
   }
