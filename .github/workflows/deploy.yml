@@ -39,5 +39,6 @@ jobs:
           with:
             host: flip1.engr.oregonstate.edu
             username: doironj
+            key: ${{ secrets.SSH_KEY }}
             script: |
               ls -a
