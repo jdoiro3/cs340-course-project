@@ -14,7 +14,7 @@ function HomePage() {
     const [entityColumns, setEntityColumns] = useState([])
 
     async function getEntityColumns() {
-        let resp = await fetch('http://flip1.engr.oregonstate.edu:39182/tables/data', { only_columns: true })
+        let resp = await fetch('http://flip1.engr.oregonstate.edu:39182/tables/data', { only_columns: true, mode: 'cors'})
         let entityColumns = await resp.json()
         setEntityColumns(entityColumns)
     }
