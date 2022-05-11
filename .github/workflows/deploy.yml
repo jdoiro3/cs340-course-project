@@ -44,7 +44,7 @@ jobs:
             script: |
               cd cs340/final-project/backend
               npm install
-              ./node_modules/forever/bin/forever restart controller.mjs
+              ./node_modules/forever/bin/forever start controller.mjs
               cd ../
               ./node_modules/forever/bin/forever restart server.js
 
