@@ -34,14 +34,10 @@ jobs:
           run: |
             scp -r ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
             scp -r ./backend doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
-        - name: install packages on server
-          uses: garygrossgarten/github-action-ssh@release
+        - name: executing remote ssh commands using password
+          uses: appleboy/ssh-action@master
           with:
-            command: |
-              cd cs340/final-project/app
-              npm install
-              cd ../backend
-              npm install
             host: flip1.engr.oregonstate.edu
             username: doironj
-            privateKey: ${{ secrets.PRIVATE_KEY}}
+            script: |
+              ls -a
