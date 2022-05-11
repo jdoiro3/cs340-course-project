@@ -15,7 +15,12 @@ function HomePage() {
 
     async function getEntityColumns() {
         let resp = await fetch('/tables/data', { only_columns: true })
-        let entityColumns = await resp.json()
+        try {
+            let entityColumns = await resp.json()
+        } catch {
+            let text = await resp.text()
+            console.log(text)
+        }
         setEntityColumns(entityColumns)
     }
 

@@ -21,6 +21,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
 
     async function loadEntity() {
         let resp = await fetch(`${entityName}`)
+        console.log(resp.text())
         let entity = await resp.json()
         setEntity(entity)
     }
