@@ -33,6 +33,7 @@ jobs:
         - name: Deploy to OSU Server
           run: |
             scp -r ./app/build doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
+            scp ./app/server.js doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
             scp -r ./backend doironj@flip1.engr.oregonstate.edu:~/cs340/final-project
         - name: executing remote ssh commands using password
           uses: appleboy/ssh-action@master
@@ -41,7 +42,9 @@ jobs:
             username: doironj
             key: ${{ secrets.SSH_KEY }}
             script: |
-              cd cs340/final-project/app
+              cd cs340/final-project/backend
               npm install
-              cd ../backend
-              npm install
+              ./node_modules/forever/bin/forever restart controller.mjs
+              cd ../
+              ./node_modules/forever/bin/forever restart server.js
+

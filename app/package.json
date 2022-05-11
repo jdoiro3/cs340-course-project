@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://jdoiro3.github.io/cs340-course-project",
   "private": true,
-  "proxy": "http://localhost:39182",
+  "proxy": "http://flip1.engr.oregonstate.edu:39182",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
