@@ -6,7 +6,7 @@ import Select from 'react-select'
 import { getCustomerOptions } from '../util/customers'
 import { getSaleOptions } from '../util/sales'
 
-function AddRow({ entity, showAdd, handleAddClose }) {
+function AddRow({ entity, showAdd, handleAddClose, customerOptions }) {
 
     let initialRecord = {}
     entity.columns.forEach(c => initialRecord[c] = "")
@@ -45,7 +45,7 @@ function AddRow({ entity, showAdd, handleAddClose }) {
                                 defaultValue={[]}
                                 isMulti
                                 name="colors"
-                                options={[] /*getCustomerOptions(entities)*/}
+                                options={customerOptions}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             />

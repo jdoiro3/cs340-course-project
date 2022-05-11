@@ -36,10 +36,13 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     useEffect(() => {
         setEntity(undefined)
         loadEntity()
+    }, [entityName])
+
+    useEffect(()=> {
         if (entityName === "Sales") {
             loadCustomerOptions()
         }
-    }, [entityName])
+    }, [])
 
     async function deleteRecord(record) {
         // deletes a record from the table
@@ -83,7 +86,12 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                             showEdit={showEdit} 
                             handleEditClose={handleEditClose}
                         ></EditRow>
-                        <AddRow entity={entity} showAdd={showAdd} handleAddClose={handleAddClose}></AddRow>
+                        <AddRow 
+                            entity={entity} 
+                            showAdd={showAdd} 
+                            handleAddClose={handleAddClose}
+                            customerOptions={customerOptions}
+                        ></AddRow>
                     </div>
                 </div>
             </>
