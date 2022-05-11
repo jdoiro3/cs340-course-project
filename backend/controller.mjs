@@ -2,6 +2,7 @@
 
 import * as db from './db-connector.mjs'
 import express from 'express'
+import cors from 'cors'
 import { executeQuery } from './util.mjs'
 import fs from 'fs'
 import bodyParser from 'body-parser'
@@ -13,6 +14,7 @@ const PORT = 39182
 const jsonParser = bodyParser.json()
 
 app.use(express.json())
+app.use(cors())
 
 app.get(`/initialize`, async (req, res) => {
     fs.readFile('initialize.sql', 'utf8', async (err, sql) => {
