@@ -23,21 +23,24 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    {Object.keys(record).map(k =>
-                        <Form.Group key={k} className="mb-3">
-                            <Form.Label>{k}</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                value={record[k] === null ? "": record[k]}
-                                onChange={e => {
-                                    let newRecord = {...record}
-                                    newRecord[k] = e.target.value
-                                    setRecord(newRecord)
-                                }} 
-                                autoFocus
-                            />
-                        </Form.Group>
-                    )}
+                    {Object.keys(record).map(k => {
+                        if (k !== 'id') {
+                            return (
+                                <Form.Group key={k} className="mb-3">
+                                    <Form.Label>{k}</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        value={record[k] === null ? "": record[k]}
+                                        onChange={e => {
+                                            let newRecord = {...record}
+                                            newRecord[k] = e.target.value
+                                            setRecord(newRecord)
+                                        }} 
+                                        autoFocus
+                                    />
+                                </Form.Group>
+                        )}
+                    })}
                     {
                         entityName === "Sales" &&
                         <Form.Group key={Object.keys(record).length + 1} className="mb-3">

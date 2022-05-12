@@ -22,21 +22,24 @@ function AddRow({ entity, showAdd, handleAddClose, customerOptions }) {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    {Object.keys(record).map(k =>
-                        <Form.Group key={k} className="mb-3">
-                            <Form.Label>{k}</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                value={record[k]}
-                                onChange={e => {
-                                    let newRecord = {...record}
-                                    newRecord[k] = e.target.value
-                                    setRecord(newRecord)
-                                }} 
-                                autoFocus
-                            />
-                        </Form.Group>
-                    )}
+                    {Object.keys(record).map(k => {
+                        if (k !== 'id') {
+                            return (
+                                <Form.Group key={k} className="mb-3">
+                                    <Form.Label>{k}</Form.Label>
+                                    <Form.Control 
+                                        type="text" 
+                                        value={record[k]}
+                                        onChange={e => {
+                                            let newRecord = {...record}
+                                            newRecord[k] = e.target.value
+                                            setRecord(newRecord)
+                                        }} 
+                                        autoFocus
+                                    />
+                                </Form.Group>
+                            )}
+                    })}
                     {
                         entity.name === "Sales" &&
                         <Form.Group key={Object.keys(record).length + 1} className="mb-3">
