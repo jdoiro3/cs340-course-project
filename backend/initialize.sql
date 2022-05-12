@@ -80,7 +80,7 @@ CREATE TABLE `Sales_has_Customers` (
 
 CREATE TABLE `Vehicles` (
   `id` int(11) NOT NULL,
-  `location_id` int(11),
+  `location_id` int(11) NULL,
   `model_id` int(11) NOT NULL,
   `vin` varchar(100) NOT NULL,
   `color` varchar(50) DEFAULT NULL,
@@ -144,7 +144,7 @@ ALTER TABLE `Sales_has_Customers`
 -- Indexes for table `Vehicles`
 --
 ALTER TABLE `Vehicles`
-  ADD PRIMARY KEY (`id`,`location_id`,`model_id`),
+  ADD PRIMARY KEY (`id`,`model_id`),
   ADD UNIQUE KEY `vehicle_id_UNIQUE` (`id`),
   ADD UNIQUE KEY `vin_UNIQUE` (`vin`),
   ADD KEY `fk_Vehicles_Locations1_idx` (`location_id`),
