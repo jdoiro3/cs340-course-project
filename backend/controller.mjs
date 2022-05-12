@@ -35,13 +35,14 @@ app.get('/tables', async (req, res) => {
 })
 
 app.get(`/:table`, async (req, res) => {
+    let data
     if (req.params.filterBy && req.params.search) {
-        let data = await executeQuery(
+        data = await executeQuery(
             db.pool,
             `SELECT * FROM ${req.params.table} WHERE ${req.params.filterBy} = '${req.params.search}';`
             )
     } else {
-        let data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+        data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
     }
     let columns = await executeQuery(
         db.pool, 
