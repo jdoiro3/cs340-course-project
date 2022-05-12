@@ -18,3 +18,9 @@
 footer {
     margin: 3em;
 }
+
+.add-edit-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 18vw;
+}

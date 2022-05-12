@@ -74,12 +74,21 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                     <div className="table-container">
                         <DatabaseTable 
                             entity={entity} 
+                            setEntity={setEntity}
                             onDelete={onDelete} 
                             handleEditShow={handleEditShow} 
                             setRecordToEdit={setRecordToEdit}
                             setSaleCustomers={setSaleCustomers}
                         ></DatabaseTable>
-                        <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
+                        <div className="container">
+                            <div className="add-edit-buttons">
+                                <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
+                                {
+                                    entityName === "Customers" &&
+                                    <Button onClick={loadEntity} variant="primary">Clear Filters</Button>
+                                }
+                            </div>
+                        </div>
                         <EditRow 
                             entityName={entityName} 
                             recordToEdit={recordToEdit} 

@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 
-function TableFilter({ columns, entityName, setData }) {
+function TableFilter({ columns, entityName, setEntity }) {
 
     const [filterCol, setFilterCol] = useState(columns[0])
     const [searchVal, setSearchVal] = useState("")
@@ -15,11 +15,12 @@ function TableFilter({ columns, entityName, setData }) {
         event.preventDefault()
         console.log("searching")
         let resp = await fetch(
-            `http://flip1.engr.oregonstate.edu:39182/${entityName}`, 
-            { filterBy: filterCol, search: searchVal, mode: 'cors'}
+            `http://flip1.engr.oregonstate.edu:39182/${entityName}?filterBy=${filterCol}&search=${searchVal}`, 
+            { mode: 'cors'}
             )
         let entity = await resp.json()
-        setData(entity.data)
+        console.log(entity)
+        setEntity(entity)
     }
 
     return (
@@ -46,9 +47,9 @@ function TableFilter({ columns, entityName, setData }) {
 
 }
 
-function DatabaseTable({ entity, onDelete, setSaleCustomers, handleEditShow, setRecordToEdit }) {
+function DatabaseTable({ entity, setEntity, onDelete, setSaleCustomers, handleEditShow, setRecordToEdit }) {
 
-    const [tableData, setData] = useState(entity.data)
+    //const [tableData, setData] = useState(entity.data)
     
     return (
         <div>
@@ -57,7 +58,7 @@ function DatabaseTable({ entity, onDelete, setSaleCustomers, handleEditShow, set
             <TableFilter 
                 entityName={entity.name} 
                 columns={entity.columns} 
-                setData={setData}
+                setEntity={setEntity}
             ></TableFilter>
             }
             <Table className="table" striped bordered hover>
@@ -67,7 +68,7 @@ function DatabaseTable({ entity, onDelete, setSaleCustomers, handleEditShow, set
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map((r, i) =>
+                    {entity.data.map((r, i) =>
                         <Row 
                             entityName={entity.name} 
                             columns={entity.columns} 
