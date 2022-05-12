@@ -72,6 +72,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                     <div className="table-container">
                         <DatabaseTable 
                             entity={entity} 
+                            setEntity={setEntity}
                             onDelete={onDelete} 
                             handleEditShow={handleEditShow} 
                             handleAddShow={handleAddShow} 

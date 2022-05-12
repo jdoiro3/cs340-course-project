@@ -13,8 +13,12 @@ const app = express()
 const PORT = 39182
 const jsonParser = bodyParser.json()
 
+// middleware
+
 app.use(express.json())
 app.use(cors())
+
+// endpoints
 
 app.get(`/initialize`, async (req, res) => {
     fs.readFile('initialize.sql', 'utf8', async (err, sql) => {
@@ -31,7 +35,14 @@ app.get('/tables', async (req, res) => {
 })
 
 app.get(`/:table`, async (req, res) => {
-    let data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+    if (req.params.filterBy && req.params.search) {
+        let data = await executeQuery(
+            db.pool,
+            `SELECT * FROM ${req.params.table} WHERE ${req.params.filterBy} = '${req.params.search}';`
+            )
+    } else {
+        let data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+    }
     let columns = await executeQuery(
         db.pool, 
         `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
