@@ -36,10 +36,10 @@ app.get('/tables', async (req, res) => {
 
 app.get(`/:table`, async (req, res) => {
     let data
-    if (req.params.filterBy && req.params.search) {
+    if (req.query.filterBy !== undefined && req.query.search !== undefined) {
         data = await executeQuery(
             db.pool,
-            `SELECT * FROM ${req.params.table} WHERE ${req.params.filterBy} = '${req.params.search}';`
+            `SELECT * FROM ${req.params.table} WHERE ${req.query.filterBy} = '${req.query.search}';`
             )
     } else {
         data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
@@ -63,7 +63,7 @@ app.get('/tables/data', async (req, res) => {
             `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table}';`
             )
         columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
-        if (req.params.only_columns) {
+        if (req.query.only_columns) {
             entities.push({name: table, columns})
         } else {
             let data = await executeQuery(db.pool, `SELECT * FROM ${table};`)
