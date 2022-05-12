@@ -1,12 +1,12 @@
 import Row from './Row'
-import { useState, useEffect } from 'react'
 import Table from 'react-bootstrap/Table'
+import './DatabaseTable.css'
+import { useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import './DatabaseTable.css'
 
-function TableFilter({ columns, entityName, setEntity }) {
+function TableFilter({ columns, entityName, setData }) {
 
     const [filterCol, setFilterCol] = useState(columns[0])
     const [searchVal, setSearchVal] = useState("")
@@ -19,8 +19,7 @@ function TableFilter({ columns, entityName, setEntity }) {
             { filterBy: filterCol, search: searchVal, mode: 'cors'}
             )
         let entity = await resp.json()
-        console.log(entity)
-        setEntity(entity)
+        setData(entity.data)
     }
 
     return (
@@ -47,11 +46,20 @@ function TableFilter({ columns, entityName, setEntity }) {
 
 }
 
-function DatabaseTable({ entity, setEntity, onDelete, setSaleCustomers, handleEditShow, handleAddShow, setRecordToEdit }) {
+function DatabaseTable({ entity, onDelete, setSaleCustomers, handleEditShow, setRecordToEdit }) {
+
+    const [tableData, setData] = useState(entity.data)
     
     return (
         <div>
-            {entity.name === "Customers" && <TableFilter entityName={entity.name} columns={entity.columns} setEntity={setEntity}></TableFilter>} 
+            {
+            entity.name === "Customers" && 
+            <TableFilter 
+                entityName={entity.name} 
+                columns={entity.columns} 
+                setData={setData}
+            ></TableFilter>
+            }
             <Table className="table" striped bordered hover>
                 <thead>
                     <tr>
@@ -59,10 +67,19 @@ function DatabaseTable({ entity, setEntity, onDelete, setSaleCustomers, handleEd
                     </tr>
                 </thead>
                 <tbody>
-                    {entity.data.map((r, i) => <Row entityName={entity.name} columns={entity.columns} setSaleCustomers={setSaleCustomers} entityInstance={r} key={i} handleEditShow={handleEditShow} setRecordToEdit={setRecordToEdit} onDelete={onDelete} />)}
+                    {tableData.map((r, i) =>
+                        <Row 
+                            entityName={entity.name} 
+                            columns={entity.columns} 
+                            setSaleCustomers={setSaleCustomers} 
+                            entityInstance={r} key={i} 
+                            handleEditShow={handleEditShow} 
+                            setRecordToEdit={setRecordToEdit} 
+                            onDelete={onDelete} 
+                        />
+                        )}
                 </tbody>
             </Table>
-            <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
         </div>
     )
 }

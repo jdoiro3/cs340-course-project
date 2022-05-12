@@ -5,6 +5,8 @@ import EditRow from '../components/EditRow'
 import AddRow from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
 import { getCustomerOptions } from '../util/customers'
+import Button from 'react-bootstrap/Button'
+
 
 function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
 
@@ -72,13 +74,12 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                     <div className="table-container">
                         <DatabaseTable 
                             entity={entity} 
-                            setEntity={setEntity}
                             onDelete={onDelete} 
                             handleEditShow={handleEditShow} 
-                            handleAddShow={handleAddShow} 
                             setRecordToEdit={setRecordToEdit}
                             setSaleCustomers={setSaleCustomers}
                         ></DatabaseTable>
+                        <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
                         <EditRow 
                             entityName={entityName} 
                             recordToEdit={recordToEdit} 
