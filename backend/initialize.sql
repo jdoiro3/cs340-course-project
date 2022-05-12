@@ -80,7 +80,7 @@ CREATE TABLE `Sales_has_Customers` (
 
 CREATE TABLE `Vehicles` (
   `id` int(11) NOT NULL,
-  `location_id` int(11) NOT NULL,
+  `location_id` int(11),
   `model_id` int(11) NOT NULL,
   `vin` varchar(100) NOT NULL,
   `color` varchar(50) DEFAULT NULL,
@@ -255,12 +255,12 @@ VALUES
 
 INSERT INTO Vehicles (location_id, model_id, vin, color, trim, mileage, is_used, date_acquired, price_paid, msrp)
 VALUES
-(1, 1, '701787041',	'Black', 'Ecoboost Premium', 38, 0, '2019-03-09', 27225.00, 32225.00),
-(1, 1, '692589118', 'Red', 'GT', 6812, 1, '2020-09-14', 29500.00, 37275.00),
-(1, 2, '676321704', 'White', 'Limited', 27, 0, '2021-07-21', 41555.00, 46555.00),
-(2, 4, '624236745', 'Blue', 'Outer Banks', 40, 0, '2022-04-20', 37950.00, 42950.00),
+(NULL, 1, '701787041',	'Black', 'Ecoboost Premium', 38, 0, '2019-03-09', 27225.00, 32225.00),
+(NULL, 1, '692589118', 'Red', 'GT', 6812, 1, '2020-09-14', 29500.00, 37275.00),
+(NULL, 2, '676321704', 'White', 'Limited', 27, 0, '2021-07-21', 41555.00, 46555.00),
+(NULL, 4, '624236745', 'Blue', 'Outer Banks', 40, 0, '2022-04-20', 37950.00, 42950.00),
 (2, 5, '776559754', 'Black', 'TRD Sport', 13157, 1, '2022-04-26', 26500.00, 40450.00),
-(1, 2, '693335956', 'Blue', 'Limited', 10189, 1, '2022-01-04', 31750.00, 46555.00);
+(NULL, 2, '693335956', 'Blue', 'Limited', 10189, 1, '2022-01-04', 31750.00, 46555.00);
 
 INSERT INTO Sales (employee_id, vehicle_id, location_id, date, purchase_price)
 VALUES
