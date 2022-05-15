@@ -218,31 +218,23 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
     // insert new record into table
 })
 
+// delete a table record
 app.delete(`/:table/:_id`, async (req, res) => {
-    // delete a table record
-})
-
-/**
- * Retrieves all the Customers in the database.
- * 
- * Sends back the Customers as an array of JSON objects.
- */
- app.get('/customers', (req, res) => {
-    const query = 'SELECT * FROM Customers;'
+    if (table === 'Sales_has_Customers') {
+        const query = `DELETE FROM Sales_has_Customers
+            WHERE sale_id = ${req.body.sale_id}
+            AND customer_id = ${req.body.customer_id};`
+    } else {
+        const query = `DELETE FROM ${req.params.table} WHERE id = ${req.params._id};`
+    }
+    
     db.pool.query(query, (error, results, fields) => {
-        res.status(200).json(results)
-    })
-})
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
 
-/**
- * Retrieves all the Employees in the database.
- * 
- * Sends back the Employees as an array of JSON objects.
- */
- app.get('/employees', (req, res) => {
-    const query = 'SELECT * FROM Employees;'
-    db.pool.query(query, (error, results, fields) => {
-        res.status(200).json(results)
+        res.status(204).send()
     })
 })
 
