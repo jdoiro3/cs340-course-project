@@ -69,7 +69,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     } else {
         return (
             <>
-                <h2>{entityName} Table</h2>
+                <h2>{entityName}</h2>
                 <div className="container">
                     <div className="table-container">
                         <DatabaseTable 
@@ -82,7 +82,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                         ></DatabaseTable>
                         <div className="container">
                             <div className="add-edit-buttons">
-                                <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name}</Button>
+                                <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name} Record</Button>
                                 {
                                     entityName === "Customers" &&
                                     <Button onClick={loadEntity} variant="primary">Clear Filters</Button>

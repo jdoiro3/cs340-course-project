@@ -18,7 +18,7 @@ function AddRow({ entity, showAdd, handleAddClose, customerOptions }) {
     return (
         <Modal show={showAdd} onHide={handleAddClose} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Add {entity.name} Entity</Modal.Title>
+                <Modal.Title>Add {entity.name} Record</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
