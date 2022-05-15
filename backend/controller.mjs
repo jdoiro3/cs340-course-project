@@ -238,6 +238,115 @@ app.delete(`/:table/:_id`, async (req, res) => {
     })
 })
 
+// returns id, customer from Customers
+// where customer = "first_name last_name (telephone)"
+// can be used in dropdown menus or as a column in tables where customer_id is present as a foreign key
+app.get(`/foreign_Customers`, async (req, res) => {
+    const query = `SELECT id, CONCAT(first_name, ' ', last_name, ' ', '(', telephone, ')') AS customer
+        FROM Customers;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
+// returns id, employee from Employees
+// where employee = "first_name last_name (work_telephone)"
+// can be used in dropdown menus or as a column in tables where employee_id is present as a foreign key
+app.get(`/foreign_Employees`, async (req, res) => {
+    const query = `SELECT id, CONCAT(first_name, ' ', last_name, ' ', '(', work_telephone, ')') AS employee
+        FROM Employees;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
+// returns id, location from Locations
+// where location = "street (code)"
+// can be used in dropdown menus or as a column in tables where location_id is present as a foreign key
+app.get(`/foreign_Locations`, async (req, res) => {
+    const query = `SELECT id, CONCAT(street, ' ', '(', code, ')') AS location
+        FROM Locations;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
+// returns id, model from Models
+// where model = "model_year manufacturer model"
+// can be used in dropdown menus or as a column in tables where model_id is present as a foreign key
+app.get(`/foreign_Models`, async (req, res) => {
+    const query = `SELECT id, CONCAT(model_year, ' ', manufacturer, ' ', model) AS model
+        FROM Models;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
+// returns id, vehicle from Vehicles, Models
+// where id = Vehicles.id
+// where vehicle = "Models.model_year Models.manufacturer Models.model (Vehicles.vin)"
+// can be used in dropdown menus or as a column in tables where vehicle_id is present as a foreign key
+app.get(`/foreign_Vehicles`, async (req, res) => {
+    const query = `SELECT Vehicles.id, CONCAT(Models.model_year, ' ', Models.manufacturer, ' ', Models.model, ' ',
+        '(', Vehicles.vin, ')') AS vehicle
+        FROM Vehicles
+        INNER JOIN Models ON Vehicles.model_id = Models.id;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
+// returns id, sale from Sales, Vehicles, Models
+// where id = Sales.id
+// where sale = "Models.model_year Models.manufacturer Models.model (Vehicles.vin) on Sales.date"
+// can be used in dropdown menus or as a column in tables where sale_id is present as a foreign key
+app.get(`/foreign_Sales`, async (req, res) => {
+    const query = `SELECT Sales.id, CONCAT(Models.model_year, ' ', Models.manufacturer, ' ', Models.model, ' ',
+        '(', Vehicles.vin, ')', ' on ', Sales.date) AS sale
+        FROM Sales
+        INNER JOIN Vehicles ON Sales.vehicle_id = Vehicles.id
+        INNER JOIN Models ON Vehicles.model_id = Models.id;`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(200).json(results)
+    }) 
+})
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`)
 })
