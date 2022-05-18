@@ -291,11 +291,12 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
  *         description: Returns JSON
  */
 app.delete(`/:table/:_id`, async (req, res) => {
+    let table = req.params.table
     if (table === 'Sales_has_Customers') {
         res.status(400).json({error: "cannot use endpoint for Sales_has_Customers"})
     } else {
-        let sqlStmt = `DELETE FROM ${req.params.table} WHERE id = ${req.params._id};`
         try {
+            let sqlStmt = `DELETE FROM ${table} WHERE id = ${req.params._id};`
             let resp = await executeQuery(db.pool, sqlStmt)
             res.status(200).json(resp)
         } catch (error) {
