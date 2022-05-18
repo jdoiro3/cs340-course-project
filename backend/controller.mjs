@@ -217,57 +217,59 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
         }
         return `${c} = ${v}`
     }).join(",")
-    let sqlStmt = `UPDATE ${table} SET ${set} WHERE id = ${_id};`
-    try {
-        // when updating sales we start a transaction, delete the intersection records, insert the new records based
-        // on the users changes, then finally update the record in the sales table
-        if (table === "Sales") {
-            db.pool.getConnection((error, conn) => {
-                if (error) {
-                    console.log(error)
-                    throw error
-                } else {
-                    conn.beginTransaction(async (err) => {
-                        if (err) { throw err }
-                        try {
-                            // delete sale_id records since we don't know what the user changed
-                            await executeQuery(conn, `DELETE FROM Sales_has_Customers WHERE sale_id = ${_id};`)
-                            console.log("executed delete")
-                        } catch (error) {
+
+    // when updating sales we start a transaction, delete the intersection records, insert the new records based
+    // on the users changes, then finally update the record in the sales table
+    if (table === "Sales") {
+        db.pool.getConnection((error, conn) => {
+            if (error) {
+                console.log(error)
+                throw error
+            } else {
+                conn.beginTransaction(async (err) => {
+                    if (err) { throw err }
+                    try {
+                        // delete sale_id records since we don't know what the user changed
+                        await executeQuery(conn, `DELETE FROM Sales_has_Customers WHERE sale_id = ${_id};`)
+                    } catch (error) {
+                        console.log(error)
+                        conn.rollback((e) => { throw e })
+                    }
+                    try {
+                        // for each sale customer provided in the form, insert it into the intersection table
+                        saleCustomers.forEach(async (cust) => {
+                        await executeQuery(conn, `INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES (${_id}, ${cust});`)
+                        })
+                    } catch (error) {
+                        console.log(error)
+                        conn.rollback((e) => { throw e })
+                    }
+                    try {
+                        // update the data in the sale table
+                        await executeQuery(conn, `UPDATE ${table} SET ${set} WHERE id = ${_id};`)
+                    } catch (error) {
+                        console.log(error)
+                        conn.rollback((e) => { throw e })
+                    }
+                    conn.commit(error => {
+                        if (error) {
                             console.log(error)
-                            conn.rollback((e) => { throw e })
+                            connection.rollback(() => { throw err })
                         }
-                        try {
-                            // for each sale customer provided in the form, insert it into the intersection table
-                            saleCustomers.forEach(async (cust) => {
-                            await executeQuery(conn, `INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES (${_id}, ${cust});`)
-                            })
-                        } catch (error) {
-                            console.log(error)
-                            conn.rollback((e) => { throw e })
-                        }
-                        try {
-                            // update the data in the sale table
-                            var resp = await executeQuery(conn, sqlStmt)
-                        } catch (error) {
-                            conn.rollback((e) => { throw e })
-                        }
-                        conn.commit(error => {
-                            if (error) {
-                              return connection.rollback(() => { throw err })
-                            }
-                            res.status(200).json(resp)
-                          })
+                        res.status(200).json({status: "success"})
                     })
-                }
-            })
-        } else {
-            let resp = await executeQuery(db.pool, sqlStmt)
+                })
+            }
+        })
+    // not the sales table
+    } else {
+        try {
+            let resp = await executeQuery(db.pool, `UPDATE ${table} SET ${set} WHERE id = ${_id};`)
             res.status(200).json(resp)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json({ error })
         }
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({ error })
     }
 })
 
