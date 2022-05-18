@@ -30,7 +30,8 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     }
 
     async function loadEntity() {
-        let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
+        // let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
+        let resp = await fetch(`http://localhost:39182/${entityName}`, {mode: 'cors'})
         let entity = await resp.json()
         setEntity(entity)
     }

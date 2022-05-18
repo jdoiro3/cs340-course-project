@@ -102,13 +102,33 @@ app.get(`/:table`, async (req, res) => {
             `SELECT * FROM ${req.params.table} WHERE ${req.query.filterBy} = '${req.query.search}';`
             )
     } else {
-        data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+        if (req.params.table === 'Vehicles') {
+            data = await executeQuery(db.pool,
+                `SELECT Vehicles.id, Vehicles.location_id, 
+                    CONCAT(Locations.street, ' ', '(', Locations.code, ')') AS location,
+                    Vehicles.model_id,
+                    CONCAT(Models.model_year, ' ', Models.manufacturer, ' ', Models.model) AS model,
+                    Vehicles.vin, Vehicles.color, Vehicles.trim, Vehicles.mileage, Vehicles.is_used,
+                    Vehicles.date_acquired, Vehicles.price_paid, Vehicles.msrp
+                FROM Vehicles
+                INNER JOIN Locations ON Vehicles.location_id = Locations.id
+                INNER JOIN Models ON Vehicles.model_id = Models.id;`)
+        } else {
+            data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+        }
     }
-    let columns = await executeQuery(
-        db.pool, 
-        `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
+
+    let columns
+    if (data[0] !== undefined) {
+        columns = Object.keys(data[0])
+    } else {
+        columns = await executeQuery(
+            db.pool, 
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
         )
-    columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
+        columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
+    }
+    
     let entity = {name: req.params.table, columns, data}
     res.status(200).type('json').json(entity)
 })
