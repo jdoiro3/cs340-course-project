@@ -209,11 +209,12 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
         if (typeof(v) === 'number') {
             v = String(v)
         } else {
-            v = `'${String(v)}'`
+            v = `"${String(v)}"`
         }
         return `${c} = ${v}`
     }).join(",")
     let sqlStmt = `UPDATE ${table} SET ${set} WHERE id = ${_id};`
+    console.log(sqlStmt)
     let resp = await executeQuery(db.pool, sqlStmt)
     res.status(200).json(resp)
 })

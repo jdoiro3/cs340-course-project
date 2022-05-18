@@ -4,7 +4,7 @@ import DatabaseTable from '../components/DatabaseTable'
 import EditRow from '../components/EditRow'
 import AddRow from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
-import { getCustomerOptions } from '../util/customers'
+import { getCustomerOptions } from '../util'
 import Button from 'react-bootstrap/Button'
 
 
@@ -96,6 +96,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                             customerOptions={customerOptions}
                             showEdit={showEdit} 
                             handleEditClose={handleEditClose}
+                            loadEntity={loadEntity}
                         ></EditRow>
                         <AddRow 
                             entity={entity} 

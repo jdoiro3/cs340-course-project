@@ -6,7 +6,7 @@ import Navigation from './components/Navigation'
 import { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './pages/common.css'
-import entities from './util/temp-data'
+import entities from './temp-data'
 
 function App() {
 

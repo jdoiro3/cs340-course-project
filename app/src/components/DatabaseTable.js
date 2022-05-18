@@ -13,7 +13,6 @@ function TableFilter({ columns, entityName, setEntity }) {
 
     async function onSubmit(event) {
         event.preventDefault()
-        console.log("searching")
         let resp = await fetch(
             `http://flip1.engr.oregonstate.edu:39182/${entityName}?filterBy=${filterCol}&search=${searchVal}`, 
             { mode: 'cors'}

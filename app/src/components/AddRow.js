@@ -3,8 +3,6 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
-import { getCustomerOptions } from '../util/customers'
-import { getSaleOptions } from '../util/sales'
 
 function AddRow({ entity, showAdd, handleAddClose, customerOptions }) {
 

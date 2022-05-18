@@ -1,7 +1,7 @@
 import { BsPencilSquare } from 'react-icons/bs'
 import { MdDeleteOutline } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
-import { getSaleCustomers } from '../util/customers'
+import { formatValue, getSaleCustomers } from '../util'
 
 function Row({ entityName, entityInstance, columns, handleEditShow, onDelete, setRecordToEdit, setSaleCustomers }) {
 
@@ -16,7 +16,7 @@ function Row({ entityName, entityInstance, columns, handleEditShow, onDelete, se
 
     return (
         <tr key={entityInstance.id}>
-            {columns.map((col, i) => <td key={i}>{entityInstance[col]}</td>)}
+            {columns.map((col, i) => <td key={i}>{formatValue(entityInstance[col])}</td>)}
             <td>
                 <Button variant="primary" onClick={() => onEdit(entityInstance)} ><BsPencilSquare /></Button>
             </td>
