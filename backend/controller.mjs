@@ -158,21 +158,26 @@ app.get('/tables/data', async (req, res) => {
  *       200:
  *         description: Returns string
  */
-app.post(`/:table/:_id`, jsonParser, async (req, res) => {
-    let table = req.params.table
-    let _id = req.params._id
-    let valuesObj = req.body
-    let columns = Object.keys(valuesObj).map(c => String(c)).join(",")
-    let values = Object.values(valuesObj).map(v => {
+app.post(`/:table`, jsonParser, async (req, res) => {
+    let columns = Object.keys(req.body).map(c => String(c)).join(",")
+    let values = Object.values(req.body).map(v => {
         if (typeof(v) === 'number') {
             return String(v)
         } else {
             return `'${String(v)}'`
         }
     }).join(",")
-    let sqlStmt = `INSERT INTO ${table} (${columns}) VALUES (${values});`
-    res.json({_id, sql: sqlStmt})
-    // insert new record into table
+
+    const query = `INSERT INTO ${req.params.table} (${columns}) VALUES (${values});`
+
+    db.pool.query(query, (error, results, fields) => {
+        if (error) {
+            console.error(error)
+            res.status(500).json({ error: error })
+        }
+
+        res.status(201).json(results)
+    })
 })
 
 /**
