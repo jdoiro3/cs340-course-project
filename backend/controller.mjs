@@ -294,13 +294,13 @@ app.delete(`/:table/:_id`, async (req, res) => {
     if (table === 'Sales_has_Customers') {
         res.status(400).json({error: "cannot use endpoint for Sales_has_Customers"})
     } else {
-        const query = `DELETE FROM ${req.params.table} WHERE id = ${req.params._id};`
-    }
-    try {
-        let resp = await executeQuery(db.pool, sqlStmt)
-        res.status(200).json(resp)
-    } catch (error) {
-        res.status(400).json({ error })
+        let sqlStmt = `DELETE FROM ${req.params.table} WHERE id = ${req.params._id};`
+        try {
+            let resp = await executeQuery(db.pool, sqlStmt)
+            res.status(200).json(resp)
+        } catch (error) {
+            res.status(400).json({ error })
+        }
     }
 })
 
