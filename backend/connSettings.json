@@ -1,8 +1,8 @@
 {
     "connectionLimit": 10,
     "host": "classmysql.engr.oregonstate.edu",
-    "user": "cs340_doironj",
-    "password": "2410",
+    "user": "",
+    "password": "",
     "database": "cs340_doironj",
     "multipleStatements": true
 }
