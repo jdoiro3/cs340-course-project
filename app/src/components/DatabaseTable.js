@@ -46,9 +46,7 @@ function TableFilter({ columns, entityName, setEntity }) {
 
 }
 
-function DatabaseTable({ entity, setEntity, onDelete, setSaleCustomers, handleEditShow, setRecordToEdit }) {
-
-    //const [tableData, setData] = useState(entity.data)
+function DatabaseTable({ entity, setEntity, loadEntity, setSaleCustomers, handleEditShow, setRecordToEdit }) {
     
     return (
         <div>
@@ -75,7 +73,7 @@ function DatabaseTable({ entity, setEntity, onDelete, setSaleCustomers, handleEd
                             entityInstance={r} key={i} 
                             handleEditShow={handleEditShow} 
                             setRecordToEdit={setRecordToEdit} 
-                            onDelete={onDelete} 
+                            loadEntity={loadEntity} 
                         />
                         )}
                 </tbody>

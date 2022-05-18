@@ -9,18 +9,29 @@ import { formatValue, getSaleOptions, getCustomerSales } from '../util'
 function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCustomers, customerOptions, loadEntity }) {
 
     const [record, setRecord] = useState(recordToEdit)
+    const [selectedOptions, setSelectedOptions] = useState(entityName == "Sales" ? salesCustomers.map(c => c.id): [])
 
     // on each render/change of recordToEdit set the record state variable
     useEffect(() => { 
         setRecord(recordToEdit)
     }, [recordToEdit])
 
+    function handleSelectChange(options) {
+        options = options.map(option => option.value)
+        console.log(options)
+        setSelectedOptions(options)
+    }
+
     async function onSubmit(event) {
         event.preventDefault()
         let values = Object.assign({}, record)
         delete values.id
         Object.keys(values).forEach(k => values[k] = formatValue(values[k]))
-        const resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}/${record.id}`, {
+        if (entityName === "Sales") {
+            values.saleCustomers = selectedOptions
+        }
+        // update the 
+        let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}/${record.id}`, {
             mode: 'cors',
             method: 'PUT',
             body: JSON.stringify(values),
@@ -29,11 +40,11 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
             },
         })
         if(resp.status === 200){
-            alert(`Successfully edited ${record.id}!`)
             loadEntity()
             handleEditClose()
+            console.log(values)
         } else {
-            alert(`Failed to add movie, status code = ${resp.status}`)
+            alert(`Failed to update ${record.id}. ${resp}`)
             loadEntity()
             handleEditClose()
         }
@@ -75,6 +86,7 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
                                 options={customerOptions}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
+                                onChange={handleSelectChange}
                             />
                         </Form.Group>
                     }

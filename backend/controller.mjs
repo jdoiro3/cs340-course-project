@@ -179,7 +179,7 @@ app.post(`/:table/:_id`, jsonParser, async (req, res) => {
  * @swagger
  * /{table}/{_id}:
  *   put:
- *     description: Update a record in a table.
+ *     description: Update a record in a table. If the table is Sales, the JSON body should contain an attribute named saleCustomers, which contains an array of customer id for the sale.
  *     requestBody:
  *       required: true
  *       content:
@@ -195,15 +195,19 @@ app.post(`/:table/:_id`, jsonParser, async (req, res) => {
  *       - in: path
  *         name: _id
  *         type: integer
- *         description: Column to filter the table by
+ *         description: ID of the record to update
  *     responses:
  *       200:
- *         description: Returns string
+ *         description: Returns JSON
  */
 app.put(`/:table/:_id`, jsonParser, async (req, res) => {
     let table = req.params.table
     let _id = req.params._id
     let valuesObj = req.body
+    if (table === "Sales") {
+        var saleCustomers = [...valuesObj.saleCustomers]
+        delete valuesObj.saleCustomers
+    }
     let set = Object.keys(valuesObj).map(c => {
         let v = valuesObj[c]
         if (typeof(v) === 'number') {
@@ -214,29 +218,90 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
         return `${c} = ${v}`
     }).join(",")
     let sqlStmt = `UPDATE ${table} SET ${set} WHERE id = ${_id};`
-    console.log(sqlStmt)
-    let resp = await executeQuery(db.pool, sqlStmt)
-    res.status(200).json(resp)
+    try {
+        // when updating sales we start a transaction, delete the intersection records, insert the new records based
+        // on the users changes, then finally update the record in the sales table
+        if (table === "Sales") {
+            db.pool.getConnection((error, conn) => {
+                if (error) {
+                    console.log(error)
+                    throw error
+                } else {
+                    conn.beginTransaction(async (err) => {
+                        if (err) { throw err }
+                        try {
+                            // delete sale_id records since we don't know what the user changed
+                            await executeQuery(conn, `DELETE FROM Sales_has_Customers WHERE sale_id = ${_id};`)
+                            console.log("executed delete")
+                        } catch (error) {
+                            console.log(error)
+                            conn.rollback((e) => { throw e })
+                        }
+                        try {
+                            // for each sale customer provided in the form, insert it into the intersection table
+                            saleCustomers.forEach(async (cust) => {
+                            await executeQuery(conn, `INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES (${_id}, ${cust});`)
+                            })
+                        } catch (error) {
+                            console.log(error)
+                            conn.rollback((e) => { throw e })
+                        }
+                        try {
+                            // update the data in the sale table
+                            var resp = await executeQuery(conn, sqlStmt)
+                        } catch (error) {
+                            conn.rollback((e) => { throw e })
+                        }
+                        conn.commit(error => {
+                            if (error) {
+                              return connection.rollback(() => { throw err })
+                            }
+                            res.status(200).json(resp)
+                          })
+                    })
+                }
+            })
+        } else {
+            let resp = await executeQuery(db.pool, sqlStmt)
+            res.status(200).json(resp)
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ error })
+    }
 })
 
-// delete a table record
+/**
+ * @swagger
+ * /{table}/{_id}:
+ *   delete:
+ *     description: Delete a record in a table.
+ *     parameters:
+ *       - in: path
+ *         name: table
+ *         required: true
+ *         description: Table name in the database
+ *         type: string
+ *       - in: path
+ *         name: _id
+ *         type: integer
+ *         description: ID of the record to delete
+ *     responses:
+ *       200:
+ *         description: Returns JSON
+ */
 app.delete(`/:table/:_id`, async (req, res) => {
     if (table === 'Sales_has_Customers') {
-        const query = `DELETE FROM Sales_has_Customers
-            WHERE sale_id = ${req.body.sale_id}
-            AND customer_id = ${req.body.customer_id};`
+        res.status(400).json({error: "cannot use endpoint for Sales_has_Customers"})
     } else {
         const query = `DELETE FROM ${req.params.table} WHERE id = ${req.params._id};`
     }
-    
-    db.pool.query(query, (error, results, fields) => {
-        if (error) {
-            console.error(error)
-            res.status(500).json({ error: error })
-        }
-
-        res.status(204).send()
-    })
+    try {
+        let resp = await executeQuery(db.pool, sqlStmt)
+        res.status(200).json(resp)
+    } catch (error) {
+        res.status(400).json({ error })
+    }
 })
 
 // returns id, customer from Customers

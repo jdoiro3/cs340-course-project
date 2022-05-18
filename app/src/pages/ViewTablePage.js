@@ -46,15 +46,6 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
         }
     }, [])
 
-    async function deleteRecord(record) {
-        // deletes a record from the table
-    }
-
-    const onDelete = async (record) => {
-        deleteRecord(record)
-        loadEntity()
-    }
-
     if (entity === undefined) {
         return (
             <div className="container">
@@ -75,7 +66,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                         <DatabaseTable 
                             entity={entity} 
                             setEntity={setEntity}
-                            onDelete={onDelete} 
+                            loadEntity={loadEntity} 
                             handleEditShow={handleEditShow} 
                             setRecordToEdit={setRecordToEdit}
                             setSaleCustomers={setSaleCustomers}
@@ -103,6 +94,7 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
                             showAdd={showAdd} 
                             handleAddClose={handleAddClose}
                             customerOptions={customerOptions}
+                            loadEntity={loadEntity}
                         ></AddRow>
                     </div>
                 </div>
