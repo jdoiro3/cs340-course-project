@@ -179,7 +179,7 @@ app.post(`/:table/:_id`, jsonParser, async (req, res) => {
  * @swagger
  * /{table}/{_id}:
  *   put:
- *     description: Update a record into a table.
+ *     description: Update a record in a table.
  *     requestBody:
  *       required: true
  *       content:
@@ -214,8 +214,8 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
         return `${c} = ${v}`
     }).join(",")
     let sqlStmt = `UPDATE ${table} SET ${set} WHERE id = ${_id};`
-    res.json({_id, table, sql: sqlStmt})
-    // insert new record into table
+    let resp = await executeQuery(db.pool, sqlStmt)
+    res.status(200).json(resp)
 })
 
 // delete a table record
