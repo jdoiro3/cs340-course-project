@@ -3,8 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
-import entities from '../temp-data'
-import { formatValue, getSaleOptions, getCustomerSales } from '../util'
+import { formatValue } from '../util'
 
 function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCustomers, customerOptions, loadEntity }) {
 
@@ -16,10 +15,9 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
         setRecord(recordToEdit)
     }, [recordToEdit])
 
-    function handleSelectChange(options) {
-        options = options.map(option => option.value)
-        console.log(options)
-        setSelectedOptions(options)
+    function handleSelectChange(selected) {
+        selected = selected.map(obj => obj.value)
+        setSelectedOptions(selected)
     }
 
     async function onSubmit(event) {
@@ -87,20 +85,6 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                                 onChange={handleSelectChange}
-                            />
-                        </Form.Group>
-                    }
-                    {
-                        entityName === "Customers" &&
-                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
-                            <Form.Label>Sales</Form.Label>
-                            <Select
-                                defaultValue={() => getCustomerSales(entities, recordToEdit.id)}
-                                isMulti
-                                name="colors"
-                                options={getSaleOptions(entities)}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
                             />
                         </Form.Group>
                     }

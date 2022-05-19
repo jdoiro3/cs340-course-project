@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
+import { formatValue } from '../util'
 
 function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }) {
 
@@ -10,18 +11,25 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
     entity.columns.forEach(c => initialRecord[c] = "")
 
     const [record, setRecord] = useState(initialRecord)
+    const [selectedOptions, setSelectedOptions] = useState([])
+
+    function handleSelectChange(selected) {
+        selected = selected.map(obj => obj.value)
+        setSelectedOptions(selected)
+    }
 
     async function onSubmit(event) {
         event.preventDefault()
-
         let values = Object.assign({}, record)
+        // IDs are handled by the DB
         delete values.id
-
-        // Object.keys(values).forEach(k => values[k] = formatValue(values[k]))
-        // if (entityName === "Sales") {
-        //     values.saleCustomers = selectedOptions
-        // }
-
+        // format the values to be inserted into the database
+        Object.keys(values).forEach(k => values[k] = formatValue(values[k]))
+        // we need to also pass customers the user selected that belong to the sale
+        if (entity.name === "Sales") {
+            values.saleCustomers = selectedOptions
+        }
+        console.log(values)
         let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entity.name}`, {
             mode: 'cors',
             method: 'POST',
@@ -55,8 +63,8 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
                                 <Form.Group key={k} className="mb-3">
                                     <Form.Label>{k}</Form.Label>
                                     <Form.Control 
-                                        type="text" 
-                                        value={record[k]}
+                                        type={k.includes("date") ? "date": "text"}
+                                        value={record[k] === null ? "": formatValue(record[k])}
                                         onChange={e => {
                                             let newRecord = {...record}
                                             newRecord[k] = e.target.value
@@ -78,20 +86,7 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
                                 options={customerOptions}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
-                            />
-                        </Form.Group>
-                    }
-                    {
-                        entity.name === "Customers" &&
-                        <Form.Group key={Object.keys(record).length + 1} className="mb-3">
-                            <Form.Label>Sales</Form.Label>
-                            <Select
-                                defaultValue={[]}
-                                isMulti
-                                name="colors"
-                                options={[] /*getSaleOptions(entities)*/}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
+                                onChange={handleSelectChange}
                             />
                         </Form.Group>
                     }
