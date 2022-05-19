@@ -29,7 +29,6 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
         if (entity.name === "Sales") {
             values.saleCustomers = selectedOptions
         }
-        console.log(values)
         let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entity.name}`, {
             mode: 'cors',
             method: 'POST',
@@ -39,14 +38,12 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
             },
         })
 
-        if (resp.status === 201) {
+        if (resp.status === 200) {
             loadEntity()
             handleAddClose()
-            setRecord(initialRecord)
         } else {
             alert(`Failed to add record. ${resp}`)
-            // loadEntity()
-            // handleAddClose()
+            handleAddClose()
         }
     }
 

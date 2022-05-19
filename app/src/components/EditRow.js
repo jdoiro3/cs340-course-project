@@ -40,7 +40,6 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
         if(resp.status === 200){
             loadEntity()
             handleEditClose()
-            console.log(values)
         } else {
             alert(`Failed to update ${record.id}. ${resp}`)
             loadEntity()
