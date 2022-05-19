@@ -113,6 +113,15 @@ app.get(`/:table`, async (req, res) => {
     res.status(200).type('json').json(entity)
 })
 
+/**
+ * @swagger
+ * /{table}:
+ *   get:
+ *     description: Retrieves all database tables data.
+ *     responses:
+ *       200:
+ *         description: Returns JSON Object representing tables
+ */
 app.get('/tables/data', async (req, res) => {
     let tables = await executeQuery(db.pool, 'SHOW TABLES;')
     tables.forEach((t, i) => tables[i] = t.Tables_in_cs340_doironj)
@@ -135,9 +144,9 @@ app.get('/tables/data', async (req, res) => {
 
 /**
  * @swagger
- * /{table}/{_id}:
+ * /{table}:
  *   post:
- *     description: Insert a new record into a table.
+ *     description: Insert a new record into a table. If the table is Sales, the JSON body should contain an attribute named saleCustomers, which contains an array of customer id for the sale.
  *     requestBody:
  *       required: true
  *       content:
@@ -150,34 +159,49 @@ app.get('/tables/data', async (req, res) => {
  *         required: true
  *         description: Table name in the database
  *         type: string
- *       - in: path
- *         name: _id
- *         type: integer
- *         description: Column to filter the table by
  *     responses:
  *       200:
  *         description: Returns string
  */
 app.post(`/:table`, jsonParser, async (req, res) => {
-    let columns = Object.keys(req.body).map(c => String(c)).join(",")
-    let values = Object.values(req.body).map(v => {
+    // process request body
+    let table = req.params.table
+    let valuesObj = req.body
+    if (table === "Sales") {
+        var saleCustomers = [...valuesObj.saleCustomers]
+        delete valuesObj.saleCustomers
+    }
+    let values = Object.values(valuesObj).map(v => {
         if (typeof(v) === 'number') {
             return String(v)
         } else {
-            return `'${String(v)}'`
+            return `"${String(v)}"`
         }
     }).join(",")
-
-    const query = `INSERT INTO ${req.params.table} (${columns}) VALUES (${values});`
-
-    db.pool.query(query, (error, results, fields) => {
-        if (error) {
-            console.error(error)
-            res.status(500).json({ error: error })
+    let columns = Object.keys(valuesObj).map(col => `${col}`)
+    // execute db request
+    if (table === "Sales") {
+        let salesHasCustomersValues = saleCustomers.map(cust => `(@LAST_ID, ${cust})`).join(",")
+        try {
+            let dbResp = await executeQuery(db.pool, `
+                START TRANSACTION;
+                INSERT INTO ${table} (${columns}) VALUES (${values});
+                SET @LAST_ID = LAST_INSERT_ID();
+                INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES ${salesHasCustomersValues};
+                COMMIT;
+            `)
+            res.status(200).json(dbResp)
+        } catch (error) {
+            res.status(400).text(error)
         }
-
-        res.status(201).json(results)
-    })
+    } else {
+        try {
+            let dbResp = await executeQuery(db.pool, `INSERT INTO ${table} (${columns}) VALUES (${values});`)
+            res.status(200).json(dbResp)
+        } catch (error) {
+            res.status(400).text(error)
+        }
+    }
 })
 
 /**
@@ -226,54 +250,27 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
     // when updating sales we start a transaction, delete the intersection records, insert the new records based
     // on the users changes, then finally update the record in the sales table
     if (table === "Sales") {
-        db.pool.getConnection((error, conn) => {
-            if (error) {
-                console.log(error)
-                throw error
-            } else {
-                conn.beginTransaction(async (err) => {
-                    if (err) { throw err }
-                    try {
-                        // delete sale_id records since we don't know what the user changed
-                        await executeQuery(conn, `DELETE FROM Sales_has_Customers WHERE sale_id = ${_id};`)
-                    } catch (error) {
-                        console.log(error)
-                        conn.rollback((e) => { throw e })
-                    }
-                    try {
-                        // for each sale customer provided in the form, insert it into the intersection table
-                        saleCustomers.forEach(async (cust) => {
-                        await executeQuery(conn, `INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES (${_id}, ${cust});`)
-                        })
-                    } catch (error) {
-                        console.log(error)
-                        conn.rollback((e) => { throw e })
-                    }
-                    try {
-                        // update the data in the sale table
-                        await executeQuery(conn, `UPDATE ${table} SET ${set} WHERE id = ${_id};`)
-                    } catch (error) {
-                        console.log(error)
-                        conn.rollback((e) => { throw e })
-                    }
-                    conn.commit(error => {
-                        if (error) {
-                            console.log(error)
-                            connection.rollback(() => { throw err })
-                        }
-                        res.status(200).json({status: "success"})
-                    })
-                })
-            }
-        })
+        try {
+            let salesHasCustomersValues = saleCustomers.map(cust => `(${_id}, ${cust})`).join(",")
+            let dbResp = await executeQuery(db.pool, `
+                START TRANSACTION;
+                DELETE FROM Sales_has_Customers WHERE sale_id = ${_id};
+                INSERT INTO Sales_has_Customers (sale_id, customer_id) VALUES ${salesHasCustomersValues};
+                UPDATE ${table} SET ${set} WHERE id = ${_id};
+                COMMIT;
+            `)
+            res.status(200).json(dbResp)
+        } catch (error) {
+            res.status(400).text(error)
+        }
     // not the sales table
     } else {
         try {
-            let resp = await executeQuery(db.pool, `UPDATE ${table} SET ${set} WHERE id = ${_id};`)
-            res.status(200).json(resp)
+            let dbResp = await executeQuery(db.pool, `UPDATE ${table} SET ${set} WHERE id = ${_id};`)
+            res.status(200).json(dbResp)
         } catch (error) {
             console.log(error)
-            res.status(400).json({ error })
+            res.status(400).text({ error })
         }
     }
 })
@@ -304,8 +301,8 @@ app.delete(`/:table/:_id`, async (req, res) => {
     } else {
         try {
             let sqlStmt = `DELETE FROM ${table} WHERE id = ${req.params._id};`
-            let resp = await executeQuery(db.pool, sqlStmt)
-            res.status(200).json(resp)
+            let dbResp = await executeQuery(db.pool, sqlStmt)
+            res.status(200).json(dbResp)
         } catch (error) {
             res.status(400).json({ error })
         }
@@ -422,5 +419,6 @@ app.get(`/foreign_Sales`, async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`)
+    console.log(`Server listening at localhost:${PORT}...`)
+    console.log(`API docs are reachable at localhost:${PORT}/api-docs`)
 })
