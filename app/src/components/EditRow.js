@@ -8,7 +8,7 @@ import { formatValue } from '../util'
 function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCustomers, customerOptions, loadEntity }) {
 
     const [record, setRecord] = useState(recordToEdit)
-    const [selectedOptions, setSelectedOptions] = useState(entityName == "Sales" ? salesCustomers.map(c => c.id): [])
+    const [selectedOptions, setSelectedOptions] = useState(entityName === "Sales" ? salesCustomers.map(c => c.id): [])
 
     // on each render/change of recordToEdit set the record state variable
     useEffect(() => { 
@@ -70,7 +70,10 @@ function EditRow({ entityName, recordToEdit, showEdit, handleEditClose, salesCus
                                         autoFocus
                                     />
                                 </Form.Group>
-                        )}
+                            )
+                        } else {
+                            return null
+                        }
                     })}
                     {
                         entityName === "Sales" &&

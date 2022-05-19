@@ -1,5 +1,4 @@
 import { useState, React, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import DatabaseTable from '../components/DatabaseTable'
 import EditRow from '../components/EditRow'
 import AddRow from '../components/AddRow'
@@ -8,7 +7,7 @@ import { getCustomerOptions } from '../util'
 import Button from 'react-bootstrap/Button'
 
 
-function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
+function ViewTablePage({ entityName }) {
 
     const [recordToEdit, setRecordToEdit] = useState({})
     const [entity, setEntity] = useState()
@@ -24,11 +23,6 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     const [salesCustomers, setSaleCustomers] = useState([])
     const [customerOptions, setCustomerOptions] = useState([])
 
-    async function loadCustomerOptions() {
-        let customers = await getCustomerOptions()
-        setCustomerOptions(customers)
-    }
-
     async function loadEntity() {
         let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
         let entity = await resp.json()
@@ -36,15 +30,21 @@ function ViewTablePage({ entityName, recordToDelete, setRecordToDelete }) {
     }
 
     useEffect(() => {
+        async function loadEntity() {
+            let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
+            let entity = await resp.json()
+            setEntity(entity)
+        }
+        async function loadCustomerOptions() {
+            let customers = await getCustomerOptions()
+            setCustomerOptions(customers)
+        }
         setEntity(undefined)
         loadEntity()
-    }, [entityName])
-
-    useEffect(()=> {
         if (entityName === "Sales") {
             loadCustomerOptions()
         }
-    }, [])
+    }, [entityName])
 
     if (entity === undefined) {
         return (

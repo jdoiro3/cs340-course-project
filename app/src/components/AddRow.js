@@ -1,4 +1,4 @@
-import { useState, useEffect, React } from 'react'
+import { useState, React } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
@@ -41,6 +41,7 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
         if (resp.status === 200) {
             loadEntity()
             handleAddClose()
+            setRecord(initialRecord)
         } else {
             alert(`Failed to add record. ${resp}`)
             handleAddClose()
@@ -70,7 +71,10 @@ function AddRow({ entity, showAdd, handleAddClose, loadEntity, customerOptions }
                                         autoFocus
                                     />
                                 </Form.Group>
-                            )}
+                            )
+                        } else {
+                            return null
+                        }
                     })}
                     {
                         entity.name === "Sales" &&
