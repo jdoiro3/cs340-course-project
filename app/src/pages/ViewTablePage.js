@@ -1,9 +1,8 @@
 import { useState, React, useEffect } from 'react'
 import DatabaseTable from '../components/DatabaseTable'
-import EditRow from '../components/EditRow'
+import { EditRow } from '../components/EditRow'
 import AddRow from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
-import { getCustomerOptions } from '../util'
 import Button from 'react-bootstrap/Button'
 
 
@@ -19,9 +18,9 @@ function ViewTablePage({ entityName }) {
     const [showAdd, setAddShow] = useState(false)
     const handleAddClose = () => setAddShow(false)
     const handleAddShow = () => setAddShow(true)
-    // used for sales edit row
-    const [salesCustomers, setSaleCustomers] = useState([])
-    const [customerOptions, setCustomerOptions] = useState([])
+    // used for setting a sales customers for EditRow and Row
+    // Row sets the saleCustomers which is used within the EditRow component
+    const [saleCustomers, setSaleCustomers] = useState([])
 
     async function loadEntity() {
         let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entityName}`, {mode: 'cors'})
@@ -35,15 +34,8 @@ function ViewTablePage({ entityName }) {
             let entity = await resp.json()
             setEntity(entity)
         }
-        async function loadCustomerOptions() {
-            let customers = await getCustomerOptions()
-            setCustomerOptions(customers)
-        }
         setEntity(undefined)
         loadEntity()
-        if (entityName === "Sales") {
-            loadCustomerOptions()
-        }
     }, [entityName])
 
     if (entity === undefined) {
@@ -83,17 +75,15 @@ function ViewTablePage({ entityName }) {
                         <EditRow 
                             entityName={entityName} 
                             recordToEdit={recordToEdit} 
-                            salesCustomers={salesCustomers}
-                            customerOptions={customerOptions}
                             showEdit={showEdit} 
                             handleEditClose={handleEditClose}
                             loadEntity={loadEntity}
+                            saleCustomers={saleCustomers}
                         ></EditRow>
                         <AddRow 
                             entity={entity} 
                             showAdd={showAdd} 
                             handleAddClose={handleAddClose}
-                            customerOptions={customerOptions}
                             loadEntity={loadEntity}
                         ></AddRow>
                     </div>

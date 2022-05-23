@@ -3,7 +3,7 @@ import { MdDeleteOutline } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
 import { formatValue, getSaleCustomers } from '../util'
 
-function Row({ entityName, entityInstance, columns, handleEditShow, loadEntity, setRecordToEdit, setSaleCustomers }) {
+function Row({ setSaleCustomers, entityName, entityInstance, columns, handleEditShow, loadEntity, setRecordToEdit }) {
 
     async function onEdit(entityInstance) {
         setRecordToEdit(entityInstance)

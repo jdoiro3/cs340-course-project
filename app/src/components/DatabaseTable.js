@@ -46,7 +46,7 @@ function TableFilter({ columns, entityName, setEntity }) {
 
 }
 
-function DatabaseTable({ entity, setEntity, loadEntity, setSaleCustomers, handleEditShow, setRecordToEdit }) {
+function DatabaseTable({ entity, setEntity, loadEntity, handleEditShow, setRecordToEdit, setSaleCustomers }) {
     
     return (
         <div>
@@ -69,11 +69,11 @@ function DatabaseTable({ entity, setEntity, loadEntity, setSaleCustomers, handle
                         <Row 
                             entityName={entity.name} 
                             columns={entity.columns} 
-                            setSaleCustomers={setSaleCustomers} 
                             entityInstance={r} key={i} 
                             handleEditShow={handleEditShow} 
                             setRecordToEdit={setRecordToEdit} 
                             loadEntity={loadEntity} 
+                            setSaleCustomers={setSaleCustomers}
                         />
                         )}
                 </tbody>
