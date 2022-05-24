@@ -9,10 +9,14 @@ import { formatValue, getCustomerOptions } from '../util'
 export function ForeignKeyDropdown({ columnName, foreignEntity, foreignEntityValues, setRecord, record, nullable }) {
 
     useEffect(() => {
-        if (nullable) {
+        const hasNull = foreignEntityValues.some(v => {
+            if (v.label === "Null") { return true }
+            return false
+        })
+        if (nullable && !hasNull) {
             foreignEntityValues.push({label: "Null", value: "NULL"})
         }
-    }, [ foreignEntityValues, nullable])
+    }, [ foreignEntityValues, nullable ])
 
     return (
         <Form.Group key={columnName} className="mb-3">
