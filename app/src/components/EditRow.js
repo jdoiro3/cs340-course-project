@@ -5,6 +5,35 @@ import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import { formatValue, getCustomerOptions } from '../util'
 
+
+export function ForeignKeyDropdown({ columnName, foreignEntity, foreignEntityValues, setRecord, record, nullable }) {
+
+    useEffect(() => {
+        if (nullable) {
+            foreignEntityValues.push({label: "Null", value: "NULL"})
+        }
+    }, [ foreignEntityValues, nullable])
+
+    return (
+        <Form.Group key={columnName} className="mb-3">
+            <Form.Label>{foreignEntity}</Form.Label>
+            <Select
+                defaultValue={() => foreignEntityValues.filter(v => v.id === record[columnName])}
+                name="colors"
+                options={foreignEntityValues}
+                className="basic-single"
+                classNamePrefix="select"
+                onChange={selected => {
+                    let newRecord = {...record}
+                    newRecord[columnName] = selected.value
+                    setRecord(newRecord)
+                }}
+            />
+        </Form.Group>
+    )
+}
+
+
 export function SaleEdit({ setRecord, onSubmit, record, showEdit, handleEditClose, saleCustomers }) {
 
     const [locations, setLocations] = useState([])
@@ -19,12 +48,10 @@ export function SaleEdit({ setRecord, onSubmit, record, showEdit, handleEditClos
     }
 
     useEffect(() => {
-
         async function loadCustomerOptions() {
             let customers = await getCustomerOptions()
             setCustomerOptions(customers)
         }
-
         async function getForeignKeyData(entity, labelFunc, setFunc) {
             let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entity}`, {mode: 'cors'})
             let data = (await resp.json()).data
@@ -34,10 +61,9 @@ export function SaleEdit({ setRecord, onSubmit, record, showEdit, handleEditClos
             })
             setFunc(data)
         }
-
-        getForeignKeyData("Locations", (loc) => `${loc.street} ${loc.city}, ${loc.state}`, setLocations)
-        getForeignKeyData("Vehicles", (v) => v.vin, setVehicles)
-        getForeignKeyData("Employees", (e) => `${e.first_name} ${e.last_name}`, setEmployees)
+        getForeignKeyData("Locations", loc => `${loc.street} ${loc.city}, ${loc.state}`, setLocations)
+        getForeignKeyData("Vehicles", v => v.vin, setVehicles)
+        getForeignKeyData("Employees", e => `${e.first_name} ${e.last_name}`, setEmployees)
         loadCustomerOptions()
     }, [])
 
@@ -49,7 +75,7 @@ export function SaleEdit({ setRecord, onSubmit, record, showEdit, handleEditClos
         let newRecord = {...record}
         newRecord.saleCustomers = customersSelected
         setRecord(newRecord)
-    }, [customersSelected])
+    }, [customersSelected, record, setRecord])
 
     return (
         <Modal show={showEdit} onHide={handleEditClose} centered>
@@ -60,63 +86,37 @@ export function SaleEdit({ setRecord, onSubmit, record, showEdit, handleEditClos
                 <Form id="edit-form" onSubmit={(e) => onSubmit(e)}>
                     {Object.keys(record).map(k => {
                         switch (k) {
-                            case 'id':
-                                return null
-                            case 'saleCustomers':
+                            case 'id': case 'saleCustomers':
                                 return null
                             case 'location_id':
                                 return (
-                                    <Form.Group key={k} className="mb-3">
-                                        <Form.Label>Location</Form.Label>
-                                        <Select
-                                            defaultValue={() => locations.filter(loc => loc.id === record.location_id)}
-                                            name="colors"
-                                            options={locations}
-                                            className="basic-single"
-                                            classNamePrefix="select"
-                                            onChange={selected => {
-                                                let newRecord = {...record}
-                                                newRecord[k] = selected.value
-                                                setRecord(newRecord)
-                                            }}
-                                        />
-                                    </Form.Group>
+                                    <ForeignKeyDropdown 
+                                        columnName={k} 
+                                        foreignEntity="Location" 
+                                        foreignEntityValues={locations}
+                                        setRecord={setRecord}
+                                        record={record}
+                                    ></ForeignKeyDropdown>
                                 )
                             case 'vehicle_id':
                                 return (
-                                    <Form.Group key={k} className="mb-3">
-                                        <Form.Label>Vehicle</Form.Label>
-                                        <Select
-                                            defaultValue={() => vehicles.filter(v => v.id === record.vehicle_id)}
-                                            name="colors"
-                                            options={vehicles}
-                                            className="basic-single"
-                                            classNamePrefix="select"
-                                            onChange={selected => {
-                                                let newRecord = {...record}
-                                                newRecord[k] = selected.value
-                                                setRecord(newRecord)
-                                            }}
-                                        />
-                                    </Form.Group>
+                                    <ForeignKeyDropdown 
+                                        columnName={k}
+                                        foreignEntity="Vehicle" 
+                                        foreignEntityValues={vehicles}
+                                        setRecord={setRecord}
+                                        record={record}
+                                    ></ForeignKeyDropdown>
                                 )
                             case 'employee_id':
                                 return (
-                                    <Form.Group key={k} className="mb-3">
-                                        <Form.Label>Employee</Form.Label>
-                                        <Select
-                                            defaultValue={() => employees.filter(e => e.id === record.employee_id)}
-                                            name="colors"
-                                            options={employees}
-                                            className="basic-single"
-                                            classNamePrefix="select"
-                                            onChange={selected => {
-                                                let newRecord = {...record}
-                                                newRecord[k] = selected.value
-                                                setRecord(newRecord)
-                                            }}
-                                        />
-                                    </Form.Group>
+                                    <ForeignKeyDropdown 
+                                        columnName={k}
+                                        foreignEntity="Employee" 
+                                        foreignEntityValues={employees}
+                                        setRecord={setRecord}
+                                        record={record}
+                                    ></ForeignKeyDropdown>
                                 )
                             default:
                                 return (
@@ -195,21 +195,99 @@ export function EmployeeEdit({ setRecord, onSubmit, record, showEdit, handleEdit
                                 return null
                             case 'location_id':
                                 return (
+                                    <ForeignKeyDropdown 
+                                        columnName="location_id" 
+                                        foreignEntity="Location" 
+                                        foreignEntityValues={locations}
+                                        setRecord={setRecord}
+                                        record={record}
+                                    ></ForeignKeyDropdown>
+                                )
+                            default:
+                                return (
                                     <Form.Group key={k} className="mb-3">
-                                        <Form.Label>Location</Form.Label>
-                                        <Select
-                                            defaultValue={() => locations.filter(loc => loc.id === record.location_id)}
-                                            name="colors"
-                                            options={locations}
-                                            className="basic-single"
-                                            classNamePrefix="select"
-                                            onChange={selected => {
+                                        <Form.Label>{k}</Form.Label>
+                                        <Form.Control 
+                                            // assumes date columns contain the value 'date' in the column name
+                                            type={k.includes("date") ? "date": "text"}
+                                            value={record[k] === null ? "": formatValue(record[k])}
+                                            onChange={e => {
                                                 let newRecord = {...record}
-                                                newRecord[k] = selected.value
+                                                newRecord[k] = e.target.value
                                                 setRecord(newRecord)
-                                            }}
+                                            }} 
+                                            autoFocus
                                         />
                                     </Form.Group>
+                                )
+                        }
+                    })}
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleEditClose}>
+                    Close
+                </Button>
+                <Button variant="primary" type="submit" form="edit-form">
+                    Save Changes
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
+
+
+export function VehicleEdit({ setRecord, onSubmit, record, showEdit, handleEditClose }) {
+
+    const [locations, setLocations] = useState([])
+    const [models, setModels] = useState([])
+
+    useEffect(() => {
+        async function getForeignKeyData(entity, labelFunc, setFunc) {
+            let resp = await fetch(`http://flip1.engr.oregonstate.edu:39182/${entity}`, {mode: 'cors'})
+            let data = (await resp.json()).data
+            data.forEach(rec => {
+                rec.value = rec.id
+                rec.label = labelFunc(rec)
+            })
+            setFunc(data)
+        }
+        getForeignKeyData("Locations", loc => `${loc.street} ${loc.city}, ${loc.state}`, setLocations)
+        getForeignKeyData("Models", model => `${model.model_year} ${model.manufacturer} ${model.model}, ${model.generation} gen`, setModels)
+    }, [])
+
+    return (
+        <Modal show={showEdit} onHide={handleEditClose} centered>
+            {console.log(locations)}
+            <Modal.Header closeButton>
+                <Modal.Title>Edit Vehicle Record</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form id="edit-form" onSubmit={(e) => onSubmit(e)}>
+                    {Object.keys(record).map(k => {
+                        switch (k) {
+                            case 'id':
+                                return null
+                            case 'location_id':
+                                return (
+                                    <ForeignKeyDropdown 
+                                        columnName={k} 
+                                        foreignEntity="Location" 
+                                        foreignEntityValues={locations}
+                                        setRecord={setRecord}
+                                        record={record}
+                                        nullable={true}
+                                    ></ForeignKeyDropdown>
+                                )
+                            case 'model_id':
+                                return (
+                                    <ForeignKeyDropdown 
+                                        columnName={k} 
+                                        foreignEntity="Model" 
+                                        foreignEntityValues={models}
+                                        setRecord={setRecord}
+                                        record={record}
+                                    ></ForeignKeyDropdown>
                                 )
                             default:
                                 return (
@@ -301,6 +379,16 @@ export function EditRow({ saleCustomers, entityName, recordToEdit, showEdit, han
                     saleCustomers={saleCustomers}
                 ></SaleEdit>
             )
+        case 'Vehicles':
+            return (
+                <VehicleEdit 
+                    setRecord={setRecord} 
+                    onSubmit={onSubmit} 
+                    record={record} 
+                    showEdit={showEdit} 
+                    handleEditClose={handleEditClose}
+                ></VehicleEdit>
+            )  
         default:
             return (
                 <Modal show={showEdit} onHide={handleEditClose} centered>

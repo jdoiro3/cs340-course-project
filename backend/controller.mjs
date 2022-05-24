@@ -241,7 +241,8 @@ app.put(`/:table/:_id`, jsonParser, async (req, res) => {
         let v = valuesObj[c]
         if (typeof(v) === 'number') {
             v = String(v)
-        } else {
+        // if the value is NULL we don't want to put quotes around the value
+        } else if (v !== 'NULL') {
             v = `"${String(v)}"`
         }
         return `${c} = ${v}`
