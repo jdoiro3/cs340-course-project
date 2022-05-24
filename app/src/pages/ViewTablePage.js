@@ -1,7 +1,7 @@
 import { useState, React, useEffect } from 'react'
 import DatabaseTable from '../components/DatabaseTable'
 import { EditRow } from '../components/EditRow'
-import AddRow from '../components/AddRow'
+import { AddRow } from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
 import Button from 'react-bootstrap/Button'
 
@@ -85,6 +85,7 @@ function ViewTablePage({ entityName }) {
                             showAdd={showAdd} 
                             handleAddClose={handleAddClose}
                             loadEntity={loadEntity}
+                            saleCustomers={saleCustomers}
                         ></AddRow>
                     </div>
                 </div>
