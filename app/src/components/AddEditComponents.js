@@ -69,7 +69,8 @@ export function SaleForm({ title, setRecord, onSubmit, record, showForm, handleF
         getForeignKeyData("Employees", e => `${e.first_name} ${e.last_name}`, setEmployees)
         loadCustomerOptions()
     }, [])
-
+    // saleCustomers changes when an edit/add button is clicked and we need to update
+    // this components customers selected to reflect either a new sale we're editing or a sale we're adding
     useEffect(() => {
         setCustomersSelected(saleCustomers.map(c => c.value))
     }, [saleCustomers])
@@ -94,6 +95,7 @@ export function SaleForm({ title, setRecord, onSubmit, record, showForm, handleF
                             case 'location_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName={k} 
                                         foreignEntity="Location" 
                                         foreignEntityValues={locations}
@@ -104,6 +106,7 @@ export function SaleForm({ title, setRecord, onSubmit, record, showForm, handleF
                             case 'vehicle_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName={k}
                                         foreignEntity="Vehicle" 
                                         foreignEntityValues={vehicles}
@@ -114,6 +117,7 @@ export function SaleForm({ title, setRecord, onSubmit, record, showForm, handleF
                             case 'employee_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName={k}
                                         foreignEntity="Employee" 
                                         foreignEntityValues={employees}
@@ -199,6 +203,7 @@ export function EmployeeForm({ title, setRecord, onSubmit, record, showForm, han
                             case 'location_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName="location_id" 
                                         foreignEntity="Location" 
                                         foreignEntityValues={locations}
@@ -273,6 +278,7 @@ export function VehicleForm({ title, setRecord, onSubmit, record, showForm, hand
                             case 'location_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName={k} 
                                         foreignEntity="Location" 
                                         foreignEntityValues={locations}
@@ -284,6 +290,7 @@ export function VehicleForm({ title, setRecord, onSubmit, record, showForm, hand
                             case 'model_id':
                                 return (
                                     <ForeignKeyDropdown 
+                                        key={k}
                                         columnName={k} 
                                         foreignEntity="Model" 
                                         foreignEntityValues={models}

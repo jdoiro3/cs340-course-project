@@ -85,7 +85,7 @@ function ViewTablePage({ entityName }) {
                             showAdd={showAdd} 
                             handleAddClose={handleAddClose}
                             loadEntity={loadEntity}
-                            saleCustomers={saleCustomers}
+                            saleCustomers={[]}
                         ></AddRow>
                     </div>
                 </div>

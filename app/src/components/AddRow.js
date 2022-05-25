@@ -2,12 +2,11 @@ import { useState, React } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
-import Select from 'react-select'
 import { formatValue } from '../util'
 import { SaleForm, VehicleForm, EmployeeForm } from './AddEditComponents'
 
 
-export function AddRow({ saleCustomers, entity, showAdd, handleAddClose, loadEntity, customerOptions }) {
+export function AddRow({ saleCustomers, entity, showAdd, handleAddClose, loadEntity }) {
 
     let initialRecord = {}
     entity.columns.forEach(c => initialRecord[c] = "")
