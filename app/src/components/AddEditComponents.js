@@ -78,7 +78,7 @@ export function SaleForm({ title, setRecord, onSubmit, record, showForm, handleF
         let newRecord = {...record}
         newRecord.saleCustomers = customersSelected
         setRecord(newRecord)
-    }, [customersSelected, record, setRecord])
+    }, [customersSelected])
 
     return (
         <Modal show={showForm} onHide={handleFormClose} centered>
