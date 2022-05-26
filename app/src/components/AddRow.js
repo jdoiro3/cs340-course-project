@@ -1,4 +1,4 @@
-import { useState, React } from 'react'
+import { useState, React, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
@@ -12,6 +12,13 @@ export function AddRow({ saleCustomers, entity, showAdd, handleAddClose, loadEnt
     entity.columns.forEach(c => initialRecord[c] = "")
 
     const [record, setRecord] = useState(initialRecord)
+
+    // when the add form is either submitted or closed we need to reset the form values
+    useEffect(() => {
+        let initialRecord = {}
+        entity.columns.forEach(c => initialRecord[c] = "")
+        setRecord(initialRecord)
+    }, [showAdd])
 
     async function onSubmit(event) {
         event.preventDefault()
@@ -32,7 +39,6 @@ export function AddRow({ saleCustomers, entity, showAdd, handleAddClose, loadEnt
         if (resp.status === 200) {
             loadEntity()
             handleAddClose()
-            setRecord(initialRecord)
         } else {
             alert(`Failed to add record. ${resp}`)
             handleAddClose()
