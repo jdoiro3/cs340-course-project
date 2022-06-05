@@ -3,7 +3,11 @@ import { MdDeleteOutline } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
 import { formatValue, getSaleCustomers } from '../util'
 
-function Row({ setSaleCustomers, entityName, entityInstance, columns, handleEditShow, loadEntity, setRecordToEdit }) {
+function Row({ 
+    setSaleCustomers, entityName, entityInstance, 
+    columns, handleEditShow, loadEntity, setRecordToEdit,
+    hasEditDelete
+}) {
 
     async function onEdit(entityInstance) {
         setRecordToEdit(entityInstance)
@@ -32,18 +36,21 @@ function Row({ setSaleCustomers, entityName, entityInstance, columns, handleEdit
         }
     }
 
-    
-    return (
-        <tr key={entityInstance.id}>
+    if (!hasEditDelete) {
+        return (
+            <tr key={entityInstance.id}>
             {columns.map((col, i) => <td key={i}>{formatValue(entityInstance[col])}</td>)}
-            <td>
-                <Button variant="primary" onClick={() => onEdit(entityInstance)} ><BsPencilSquare /></Button>
-            </td>
-            <td>
-                <Button variant="danger" onClick={() => onDelete(entityInstance)} ><MdDeleteOutline /></Button>
-            </td>
-        </tr>
-    )
+            </tr>
+        )
+    } else {
+        return (
+            <tr key={entityInstance.id}>
+                {columns.map((col, i) => <td key={i}>{formatValue(entityInstance[col])}</td>)}
+                <td><Button variant="primary" onClick={() => onEdit(entityInstance)} ><BsPencilSquare /></Button></td>
+                <td><Button variant="danger" onClick={() => onDelete(entityInstance)} ><MdDeleteOutline /></Button></td>
+            </tr>
+        )
+    }
 }
 
 export default Row

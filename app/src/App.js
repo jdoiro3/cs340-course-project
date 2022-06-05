@@ -36,7 +36,13 @@ function App() {
               key={i} 
               path={`/${t}`} 
               element={
-                <ViewTablePage entityName={t} recordToDelete={recordToDelete} setRecordToDelete={setRecordToDelete} />
+                <ViewTablePage 
+                    entityName={t} 
+                    recordToDelete={recordToDelete} 
+                    setRecordToDelete={setRecordToDelete} 
+                    hasCrud={t === "Sales_has_Customers" ? false: true}
+                    hasFilter={t === "Customers" ? true: false}
+                />
                 } 
             />
           )}

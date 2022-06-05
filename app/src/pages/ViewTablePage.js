@@ -4,9 +4,52 @@ import { EditRow } from '../components/EditRow'
 import { AddRow } from '../components/AddRow'
 import { Audio } from  'react-loader-spinner'
 import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import FormControl from 'react-bootstrap/FormControl'
 
 
-function ViewTablePage({ entityName }) {
+function TableFilter({ columns, entityName, setEntity }) {
+
+    const [filterCol, setFilterCol] = useState(columns[0])
+    const [searchVal, setSearchVal] = useState("")
+
+    async function onSubmit(event) {
+        event.preventDefault()
+        let resp = await fetch(
+            `http://flip1.engr.oregonstate.edu:39182/${entityName}?filterBy=${filterCol}&search=${searchVal}`, 
+            { mode: 'cors'}
+            )
+        let entity = await resp.json()
+        console.log(entity)
+        setEntity(entity)
+    }
+
+    return (
+        <Form onSubmit={(e) => onSubmit(e)} className="tableFilter">
+            <Form.Group className="mb-3" >
+                <Form.Label>Filter On</Form.Label>
+                <Form.Select aria-label="Column to Filter on" value={filterCol} onChange={e => setFilterCol(e.target.value)}>
+                    {columns.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                </Form.Select>
+            </Form.Group>
+            <div className="filterSearch">
+                <FormControl
+                    type="search"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                    value={searchVal}
+                    onChange={(e) => setSearchVal(e.target.value)}
+                    />
+                <Button type="submit" variant="outline-success">Search</Button>
+            </div>
+        </Form>
+    )
+
+}
+
+
+function ViewTablePage({ entityName, hasCrud, hasFilter }) {
 
     const [recordToEdit, setRecordToEdit] = useState({})
     const [entity, setEntity] = useState()
@@ -55,6 +98,14 @@ function ViewTablePage({ entityName }) {
                 <h2>{entityName}</h2>
                 <div className="container">
                     <div className="table-container">
+                        {
+                        hasFilter && 
+                        <TableFilter 
+                            entityName={entity.name} 
+                            columns={entity.columns} 
+                            setEntity={setEntity}
+                        ></TableFilter>
+                        }
                         <DatabaseTable 
                             entity={entity} 
                             setEntity={setEntity}
@@ -62,13 +113,15 @@ function ViewTablePage({ entityName }) {
                             handleEditShow={handleEditShow} 
                             setRecordToEdit={setRecordToEdit}
                             setSaleCustomers={setSaleCustomers}
+                            hasCrud={hasCrud}
+                            hasFilter={hasFilter}
                         ></DatabaseTable>
                         <div className="container">
                             <div className="add-edit-buttons">
                                 <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name} Record</Button>
                                 {
-                                    entityName === "Customers" &&
-                                    <Button onClick={loadEntity} variant="primary">Clear Filters</Button>
+                                    hasFilter &&
+                                    <Button onClick={loadEntity} variant="primary">Clear Filter</Button>
                                 }
                             </div>
                         </div>
