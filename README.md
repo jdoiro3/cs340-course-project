@@ -16,4 +16,9 @@ Repo used for the OSU CS 340 course project.
 
 ![locations](https://user-images.githubusercontent.com/57968347/172054276-dc7eca85-6765-45b8-ba98-eec7cac6f44b.gif)
 
+### Sales
+
+![sales](https://user-images.githubusercontent.com/57968347/172054519-93a927cd-1732-4eb8-8b03-4ad2bcde23dc.gif)
+
+
 
