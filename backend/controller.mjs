@@ -96,21 +96,25 @@ app.get('/tables', async (req, res) => {
  */
 app.get(`/:table`, async (req, res) => {
     let data
-    if (req.query.filterBy !== undefined && req.query.search !== undefined) {
-        data = await executeQuery(
-            db.pool,
-            `SELECT * FROM ${req.params.table} WHERE ${req.query.filterBy} = '${req.query.search}';`
+    try {
+        if (req.query.filterBy !== undefined && req.query.search !== undefined) {
+            data = await executeQuery(
+                db.pool,
+                `SELECT * FROM ${req.params.table} WHERE ${req.query.filterBy} = '${req.query.search.replace(/[\\$'"]/g, "\\$&")}';`
+                )
+        } else {
+            data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+        }
+        let columns = await executeQuery(
+            db.pool, 
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
             )
-    } else {
-        data = await executeQuery(db.pool, `SELECT * FROM ${req.params.table};`)
+        columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
+        let entity = {name: req.params.table, columns, data}
+        res.status(200).type('json').json(entity)
+    } catch (e) {
+        res.status(400).json({error: e})
     }
-    let columns = await executeQuery(
-        db.pool, 
-        `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${req.params.table}';`
-        )
-    columns.forEach((c, i) => columns[i] = c.COLUMN_NAME)
-    let entity = {name: req.params.table, columns, data}
-    res.status(200).type('json').json(entity)
 })
 
 /**
@@ -160,7 +164,7 @@ app.get('/tables/data', async (req, res) => {
  *         description: Table name in the database
  *         type: string
  *     responses:
- *       200:
+ *       - 200: 
  *         description: Returns string
  */
 app.post(`/:table`, jsonParser, async (req, res) => {
