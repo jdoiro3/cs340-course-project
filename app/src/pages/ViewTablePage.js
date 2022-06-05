@@ -118,7 +118,10 @@ function ViewTablePage({ entityName, hasCrud, hasFilter }) {
                         ></DatabaseTable>
                         <div className="container">
                             <div className="add-edit-buttons">
-                                <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name} Record</Button>
+                                {
+                                    hasCrud &&
+                                    <Button variant="primary" onClick={() => handleAddShow()}>Add {entity.name} Record</Button>
+                                }
                                 {
                                     hasFilter &&
                                     <Button onClick={loadEntity} variant="primary">Clear Filter</Button>
