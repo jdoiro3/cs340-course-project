@@ -7,8 +7,22 @@
 import mysql from 'mysql'
 import util from 'util'
 import fs from 'fs'
+import argv from 'yargs-parser'
 
-let connSettings = JSON.parse(fs.readFileSync('connSettings.json', 'utf8'));
+const args = argv(process.argv.slice(2))
+
+if (args.env === 'dev') {
+    var connSettings = {
+        "connectionLimit": 10,
+        "host": "localhost",
+        "user": args.user,
+        "password": args.password,
+        "database": args.database,
+        "multipleStatements": true
+    }
+} else {
+    var connSettings = JSON.parse(fs.readFileSync('connSettings.json', 'utf8'))
+}
 
 // Create a 'connection pool' using the provided credentials
 let pool = mysql.createPool(connSettings)

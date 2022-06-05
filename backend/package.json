@@ -17,6 +17,7 @@
     "mysql": "^2.18.1",
     "nodemon": "^2.0.16",
     "swagger-jsdoc": "^6.2.1",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "yargs-parser": "^21.0.1"
   }
 }
